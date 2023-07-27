@@ -1,0 +1,228 @@
+	СОЗДАНИЕ И УДАЛЕНИЕ БАЗЫ ДАННЫХ	
+
+CREATE DATABASE db_name - создать базу данных (с указанием имени БД)
+DROP DATABASE db_name - Удалить БД (с указанием имени БД)
+
+	СОЗДАНИЕ ТАБЛИЦЫ
+CREATE TABLE table_name - Создать таблицу с укказанием имени таблицы
+
+Пример:
+CREATE TABLE table_name (
+	id BIGSERIAL,
+	first_name VARCHAR(50),
+	last_name(50),
+	genser VARCHAR(50),
+	email VARCHAR(150),
+	date_of_birth DATE
+);
+
+	Заполнить таблицу значениями
+INSERT INTO employee(
+	first_name,
+	last_name,
+	gender,
+	email,
+	date_of_birth
+)
+VALUES ('John', 'Doe', 'Male', 'Jd@mail.com', '01/01/2000');
+
+
+	Выборка данных
+SELECT * FROM employee; - Вывести все записи из таблицы employee
+SELECT FROM employee; - Покажет, сколько записей в строке
+SELECT first_name FROM employee; - Вывести все записи из колонки first_name
+SELECT first_name, last_name FROM employee; - Вывести все записи из колонки first_name и last_name (несколько параметров)
+
+	Выборка и Сортировка (ORDER BY)
+
+
+SELECT * FROM employee ORDER BY country_of_birth ASC; - Выбрать из таблицы employee все, в порядке возврастания country_of_birth 
+//ASC - от меньшего к большему // DESC - от большего к меньшему //
+
+SELECT DISTINCT country_of_birth FROM employee ORDER BY country_of_birth;
+// DISTINCT - выбрать без повторений (выведутся уникальные названия стран) //
+
+SELECT * FROM employee WHERE gender = 'Female'; - Выбрать все записи (строки), где гендер равно Female
+// WHERE УСЛОВИЕ - после ключевого слова WHERE можно записать условие //
+
+SELECT * FROM employee WHERE gender = 'Female' AND country_of_birth = 'Russia'; - Двойное условие, записи где пол женский и страна рождения - Россия
+// С помощью ключевого слова AND можно записывать двойные условия //
+
+SELECT * FROM employee WHERE gender = 'Female' AND (country_of_birth = 'Russia' OR country_of_birth = 'Argentina'); - Выбрать женщин из России или Аргентины
+// С помощью ключевого слова OR можно записывать условие ИЛИ //
+
+SELECT * FROM employee LIMIT 20; - Вывести первые 20 записей
+// Ключевое слово LIMIT ставит лими на кол-во выводимых записей // 
+
+SELECT * FROM employee OFFSET 10 LIMIT 5; -Вывести пять позиций, начиная с 11 (Пропуская 10 позиций)
+// Ключевое слово OFFSET показывает с какой позиции + 1 будем выбирать данные
+
+SELECT * FROM employee OFFSET 10 FETCH FIRST 5 ROW ONLY; - Команда, аналогичная предыдущей
+
+
+	Другие формы запросов
+SELECT * FROM employee WHERE country_of_birth in ('Russia', 'Ukraine', 'Argentina', 'China'); - Выбрать все данные, где страна рождения входит в список IN
+// Ключевое слово IN позволяет написать запрос, где параметр будет соответсвовать списку значений //
+
+SELECT * FROM employee WHERE date_of_birth BETWEEN '2022-01-01' AND '2022-12-12'; - Выбрать все записи, где dabe_of_birth между первым и вторым значением
+// Ключевое слово BETWEEN позволяет выбрать все значения между двумя заданными параметрами (BETWEEN first AND second)
+
+SELECT * FROM employee WHERE email LIKE '%.com'; - Выбрать те записи, где email подходит под шаблон
+// Знак процента (%) - ЛЮБОЕ КОЛИЧЕСТВО СИМВОЛОВ //
+
+SELECT * FROM employee WHERE country_of_birth LIKE 'P%'; - Выбрать все записи, где имя страны начинается на 'P' 
+// LIKE - не игнорирует разный регистр, для игнорирования регистра есть iLIKE //
+
+SELECT country_of_birth, COUNT(*) FROM employee GROUP BY country_of_birth; - Группирует записи, где одинаковая страна, считает их и выводит страну с количеством записей
+
+SELECT country_of_birth, COUNT(*) FROM employee GROUP BY country_of_birth HAVING COUNT(*) > 10; - То же самое, только с условием больше 10
+// HAVING COUNT(*) > 10 - условие, чтобы было больше 10 //
+
+SELECT country_of_birth, COUNT(*) FROM employee GROUP BY country_of_birth HAVING COUNT(*) > 10 ORDER BY country_of_birth DESC; - Еще и в убывающем порядке 
+
+
+SELECT id, first_name AS name, last_name AS surname, gender AS sex, email, date_of_birth, country_of_birth FROM employee; - Это зачем-то надо
+// AS - при выводе присвоит колонке first_name имя name и тд. //
+
+
+avecoder=# SELECT COALESCE(email, 'not applicable') FROM employee; - Выбрать все записи с email, пустые email будут заменяться на 'not apllicable'
+
+	Математические операции
+SELECT MAX(price) FROM holiday; - выбрать максимальное значение из колонки price таблицы holiday
+SELECT MIN(price) FROM holiday; - выбрать минимальное значение из колонки price таблицы holiday
+SELECT AVG(price) FROM holiday; - выбрать среднее значение колонки price таблицы holiday
+SELECT КЩГТВ(AVG(price)) FROM holiday; - то же самое, только с округлением.
+SELECT destination_country, destination_city, MAX(price) FROM holiday GROUP BY destination_country, destination_city; - самые дорогие путевки в страны (destination_country) и города (destination_city)
+SELECT SUM(price) FROM holiday; - найти сумму колонки price
+SELECT distination_country, SUM(price) FROM holiday GROUP BY destination_country; - выбрать сумму всез поездок в каждую страну
+
+
+	Работа с датой и временем
+SELECT NOW(); - выводит текущее время
+SELECT NOW()::DATE; - выводит только дату
+SELECT NOW()::TIME; - выводит только время
+
+SELECT NOW() - INTERVAL '1 YEAR'; - от текущей даты перемещаемся на интервал 1 год
+SELECT NOW() - INTERVAL '10 MONTHs'; - переместиться на 10 месяцев назад
+SELECT NOW() - INTERVAL '10 DAYS'; - переместиться на 10 дней назад
+
+SELECT EXTRACT(YEAR FROM NOW()); - Выбрать из текущей даты ГОД или МЕСЯЦ или ДЕНЬ
+SELECT EXTRACT(DOW FROM NOW()); - Выбрать день недели
+
+SELECT first_name, last_name, AGE(NOW(), date_of_birth) AS age FROM employee; - Функция AGE
+
+
+	Первичные ключи (PRIMARY KEYS)
+PRIMARY KEY
+
+
+	Ограничения (CONSTRAINT)
+ALTER TABLE employee ADD CONSTRAINT unique_email_address UNIQUE (email); - Добавить ограниченияе уникальности на поле email (UNIQUE)
+// имя ограничения - unique_email_adress //
+
+SELECT DISTINCT gender FROM employee;
+// DISTINCT - выбрать уникальные //
+
+ALTER TABLE gender ADD CONSTRAIN gender_constraint CHECK (gender = 'Female' OR gender = 'Male');
+// Добавить ограничение на гендер, либо то либо то значение //
+
+
+	Работа с конфликтами
+SELECT * FROM employee WHERE email LIKE '%google%'; - Выбирает из поля email все записи с подходящим шаблоном
+
+SELECT * FROM employee WHERE email LIKE '%google%'; - то же самое, только удалить
+
+
+
+UPDATE employee SET email = 'curry@mail.com' WHERE id = 3; - Обновить в таблице employee поле email, где id = 3
+
+При возникновении конфликта можно в конце команды написать: 
+ON CONFLICT (имена полей, где конфликт) DO NOTHING; 
+Таким образом вставка не происходит, но не выводит ошибку
+
+INSERT INTO БЛА БЛА БЛА
+ON CONFLICT (id) DO UPDATE SET email = EXCLUDED.email; - Конфликт возникает по полю id
+делаем апдейт, устанавливаем в поле email отличающееся значение
+
+ON CONFLICT (id) DO UPDATE SET email = EXCLUDED.email. first_name = EXCLUDED.first_name;
+То же самое, только меняется еще и поле first_name
+
+
+
+	Внешние ключи и связи (FOREIGN KEYS)
+
+Создаем таблицу bicycle.
+В таблице employee создаем поле bicycle_id, которое будет ссылаться на поле (id) таблицы bicycle
+ALTER TABLE employee ADD bicycle_id BIGINT REFERENCES bicycle (id)
+
+ALTER TABLE employee ADD UNIQUE(bicycle_id); - делаем поле bicycle_id уникальным
+
+
+
+	Объединение таблиц
+
+
+	INNER JOIN (Объединяет таблицы по одинаковым параметрам)
+SELECT * FROM employee JOIN bicycle ON employee.bicycle_id = bicycle.id;
+// Все работники, у которых нет велосипеда, в JOIN не участвуют //
+
+ id | first_name | last_name | gender |    email     | date_of_birth | country_of_birth | bicycle_id | id |    make     |       type        | price
+----+------------+-----------+--------+--------------+---------------+------------------+------------+----+-------------+-------------------+--------
+  1 | Aloise     | Sagg      | Female | asagg3@is.gd | 2022-05-03    | France           |          2 |  2 | Apollo Cafe | Women Hybrid Bike | 160.00
+
+
+SELECT employee.first_name, bicycle.make, bicycle.type, bicycle.price
+FROM employee
+JOIN bicycle ON employee.bicycle_id = bicycle.id;
+// Выберет first_name из таблицы employee, make, type, price из таблицы bicycle //
+// И объединит по совпадению полей employee.bicycle_id = bicycle.id //
+
+	
+	LEFT JOIN 
+(Все записи из левой таблицы и записи с совпаденим из правой таблицы)
+
+SELECT * FROM employee LEFT JOIN bicycle ON bicycle.id = employee.bicycle_id;
+// Выведет даже тех, у кого нет велосипеда //
+
+SELECT * FROM employee LEFT JOIN bicycle ON bicycle.id = employee.bicycle_id
+WHERE bicycle_id IS NOT NULL;
+// Выведет только тех, у кого есть велосипед //
+
+
+	LEFT JOIN 
+(Все записи из правой таблицы и записи с совпаденим из левой таблицы)
+
+SELECT * FROM employee
+RIGHT JOIN bicycle ON bicycle.id = employee.bicycle_id;
+
+
+	FULL OUTER JOIN
+
+SELECT * FROM employee
+FULL OUTER JOIN bicycle ON bicycle.id = employee.bicycle_id;
+// Соединит вообще все, пустые поля в левой таблице, путсые поля в правой таблице //
+
+
+	Экспорт SQL-запроса в таблицу CSV
+\copy (SELECT * FROM employee WHERE bicycle_id IS NOT NULL) TO 'C:/Users/Максим/Desktop/bike' DELIMITER ',' CSV HEADER;
+
+	Уникальные идентификаторы UUID
+SELECT * FROM pg_available_extensions; - выводит список существующих расширений
+CREATE EXTENSION IF NOT EXISTS "uuid-oosp"; - установит последнюю версию расширения с именем в кавычках
+ 
+SELECT uuid_generate_v4(); - Создает рандомный id-шник
+
+// Создание таблицы с uuid в роли ПЕРВИЧНОГО КЛЮЧА //
+CREATE TABLE passport (
+passport_serial UUID NOT NULL PRIMARY KEY,
+issue_date DATE NOT NULL,
+expire_date DATE NOT NULL,
+country_of_issue VARCHAR(150( NOT NULL);
+
+// Вставить в таблицу уникальный id-шник uuid
+INSERT INTO passport (passport_serial, issue_date, expire_date, country_of_issue)
+VALUES (uuid_generate_v4(), '2000-03-19', '2000-03-19', 'United_kingdom');
+
+
+
+
