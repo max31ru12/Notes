@@ -1,0 +1,37 @@
+			НАЧАЛО РАБОТЫ С SQLite3 в Python
+			
+import sqlite3 - сначала импортирование модуля
+
+connection = sqlite.connect(database.db) - подключаемся к БД
+cur = connection.cursor() - для взаимодействия я БД используется курсор
+
+cur.execute(""" """) - в метод execute передается SQL-запрос
+
+connection.close() - всегда надо закрывать соединение
+
+***
+Расширения файла БД (принято использовать одно из четырех)
+1) .db
+2) .db3
+3) .sqlite
+4) .sqlite3
+
+Также лучше использовать контекстный менеджер для работы с БД
+with sqlite3.connect(dbname.db) as con:
+	--- дальше код ---
+***
+
+			МЕТОД EXECUTE
+			
+--- Передаем команду на создание таблицы
+cur.execute("""CREATE TABLE IF NOT EXISTS users (
+	name TEXT NOT NULL,
+	old Integer
+	)""")
+	
+*** ОГРАНИЧИТЕЛИ 
+NOT NULL - не пустое
+DEFAULT 1 - значение по умолчанию
+PRIMARY KEY - главный ключ
+AUTOINCREMENT - увеличитвать на единицу первичный ключ (в sqlite3 не обязательно)
+**
