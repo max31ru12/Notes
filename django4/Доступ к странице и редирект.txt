@@ -1,0 +1,13 @@
+---- Функция проверки авторизации и проверки на стафф ----
+
+def is_staff(user):
+
+    return user.is_staff and user.is_authenticated
+
+
+Далее нужную вьющку оборачиваем декоратором:
+
+from django.contrib.auth.decorators import user_passes_test
+
+
+@user_passes_test(is_staff, login_url='/doctor/thread/')
