@@ -1,0 +1,6 @@
+import subprocess
+
+process = Popen(command, stdout = PIPE)
+
+for line in process.stdout:
+    print(line.decode())
