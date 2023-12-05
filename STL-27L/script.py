@@ -1,0 +1,65 @@
+import serial
+from pprint import pprint
+from utils import parse_data, interpolation
+
+port = "COM3"
+baudrate = 921600
+data_length = 8
+stop_bits = serial.STOPBITS_ONE
+parity = serial.PARITY_NONE
+flow_control = False
+
+
+def main():
+    # Initializing COM3 port
+    ser = serial.Serial(port,
+                        baudrate=baudrate,
+                        stopbits=stop_bits,
+                        bytesize=data_length,
+                        parity=parity,
+                        xonxoff=flow_control)
+
+    # start_control =
+
+    result = {}
+    key = 0
+    prev = "prev"
+
+    try:
+        while True:
+            data = ser.read()
+            hex_data = ' '.join([hex(byte)[2:].zfill(2) for byte in data])
+            result[0] = ""
+            if prev == "54" and hex_data == "2c":
+                # Из out_data можно получить все данные
+                out_data = parse_data(result[key])
+
+                # # Блок выводит данные облака точек, если они не ошибка
+                if "error" not in out_data.keys():
+                    point_cloud = out_data["PointCloud"].point_cloud
+                    start_angle = out_data["start_angle"]
+                    end_angle = out_data["end_angle"]
+                    # дополняет PointCloud.point_cloud ключом angle
+                    interpolation(point_cloud, start_angle, end_angle)
+                    pprint(out_data["PointCloud"].point_cloud)
+                key += 1
+                result[key] = ""
+                result[key] += ("54 " + "2c ")
+            else:
+                # Блок нужен для того, чтобы отсечь лишнюю 54 в конце
+                temp = False
+                if hex_data == "54":
+                    temp = True
+                    prev = hex_data
+                    continue
+                if temp and hex_data != "2c":
+                    result[key] += f"54 "
+                result[key] += f"{hex_data} "
+            prev = hex_data
+
+    except KeyboardInterrupt:
+        ser.close()
+
+
+if __name__ == "__main__":
+    main()
