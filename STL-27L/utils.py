@@ -1,4 +1,6 @@
 from PointCloud import PointCloud
+import math
+import matplotlib.pyplot as plt
 
 
 def parse_data(data_sixteen: str):
@@ -31,12 +33,44 @@ def parse_data(data_sixteen: str):
 def interpolation(point_cloud: dict, start_angle: float, end_angle: float) -> dict:
 
     if 'error' not in point_cloud.keys():
-        step = (end_angle - start_angle) / (len(point_cloud) - 1)
+        if len(point_cloud) > 2: # Это костыль нужен тогда, когда в измерении всего одна точка
+            step = (end_angle - start_angle) / (len(point_cloud) - 1)
 
-        for i in range(0, len(point_cloud)):
-            key = f"Point {i + 1}"
-            angle = start_angle + step * i
-            point_cloud[key]["angle"] = angle
+            for i in range(0, len(point_cloud)):
+                key = f"Point {i + 1}"
+                angle = start_angle + step * i
+                point_cloud[key]["angle"] = angle
+        else: # Это костыль нужен тогда, когда в измерении всего одна точка
+            point_cloud["Point 1"]["angle"] = (end_angle - start_angle) / 2
     else:
         point_cloud["interpolation"] = "Interpolation Error"
     return point_cloud
+
+
+def from_pt_to_coordinates(point_cloud: dict):
+
+    coordinates = {}
+
+    for key, point in point_cloud.items():
+        x = math.sin(math.radians(point['angle'])) * point['distance']
+        y = math.cos(math.radians(point['angle'])) * point['distance']
+        coordinates[key] = {"x": round(x, 2), "y": round(y, 2)}
+
+    return coordinates
+
+
+def plot_points(x_coords, y_coords):
+    # Построение точек
+    plt.scatter(x_coords, y_coords, color='blue', marker='o')
+
+    plt.axhline(0, color='black', linestyle='--', linewidth=0.5)
+    plt.axvline(0, color='black', linestyle='--', linewidth=0.5)
+
+    # Добавление заголовка и меток осей
+    plt.title('Облако точек')
+    plt.xlabel('Ось X')
+    plt.ylabel('Ось Y')
+
+    # Отображение графика
+    plt.show()
+

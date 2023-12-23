@@ -1,0 +1,31 @@
+version: "3.5"				-версия docker-compose
+
+services:				-перечисляем сервисы
+  web-server:				-имя сервиса
+    image: nginx:latest			-образ
+    build: dockerfile_relative_path	-создать образ из докер-файла
+    container_name: mynginx   		-имя контейнера
+    volumes:				-волюмы
+      -"/opt/web/html: /var/www/html"	-локальная_директория:директория_в_контейнере
+    environment:			-переменные окружения
+      -"NGINX_PORT=80"
+      -"NGINX_HOST=myhost"
+    ports:				-проброс портов (порт_хоста:порт_контейнера)
+      -"80:80"
+      -"443:443"
+    restart: unless-stopped		-что делать с контейнером при остановке
+    depends_on:				-запуск контейнера после запуска перечисленных контейнеров
+      - app-db				-имена контейнеров (тоже в файле)
+      - postgres
+
+
+networks:				-Описывает сети
+  default				-стандартная сеть для контейнера
+    name: webnet
+    driver: bridge
+  internet:
+    name: appnet
+    driver: bridge
+
+
+

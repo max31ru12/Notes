@@ -11,7 +11,7 @@ class PointCloud:
     def __distances(self) -> list:
         result = []
         if len(self.data) % 3 == 0:
-            for n in range(3, len(self.data)+1, 3):
+            for n in range(3, len(self.data) + 1, 3):
                 result.append(tuple(self.data[n-3:n]))
             return result
         else:
@@ -28,13 +28,9 @@ class PointCloud:
                 point_cloud[key] = {"distance": value,
                                     "intensity": intensity}
                 count += 1
-            # pprint(point_cloud)
-            # print('')
             return point_cloud
         else:
             point_cloud = {"error": "incorrect length of data"}
-            # pprint(point_cloud)
-            # print('')
             return point_cloud
 
     def __str__(self):

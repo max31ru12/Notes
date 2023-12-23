@@ -1,21 +1,30 @@
-ln = int(input())
-mas = list(map(int, input().split()))
+from collections import deque
+
+graph = {
+        'A': ['M', 'P'],
+        'M': ['A', 'N'],
+        'N': ['M', 'B'],
+        'P': ['A', 'B'],
+        'B': ['P', 'N'],
+        }
 
 
-min_index = 0
-while min_index < ln - 1:
-    left = 2 * min_index + 1
-    if left <= ln - 1:
-        min_index = left
-    else:
-        break
+def bfs(start, goal, graph):
+    queue = deque([start])
+    visited = {'start': None}
 
-max_index = 0
-while max_index < ln - 1:
-    right = 2 * max_index + 2
-    if right <= ln - 1:
-        max_index = right
-    else:
-        break
+    while queue:
+        cur_node = queue.popleft()
+        if cur_node == goal:
+            break
 
-print(mas[min_index] * mas[max_index])
+        next_nodes = graph[cur_node]
+        for next_node in next_nodes:
+            if next_node not in visited:
+                queue.append(next_node)
+                visited[next_node] = cur_node
+
+    return visited
+
+
+print(bfs('A', 'B', graph))

@@ -1,0 +1,50 @@
+Команды docker:
+
+docker ps 			-посмотреть запущенные контейнеры
+docker stop id 			-остановить контейнер с указанным id
+docker images 			-посмотреть образы
+docker ps -a  			-посмотреть абсолютно все контейнеры
+docker rm id 			-удалить контейнер с указанным id
+docker rmi id 			-удалить образ с указанным id
+docker pull nginx		-скачать образ
+docker exec -it id bash		-запустить файловую систему контейнера в bash
+
+docker run -it --rm -v testdata:/data busybox
+-busybox - имя образа
+-it - хз, можно добавить d для запуска в фоне
+-v - volumes
+testdata - том на компе, data - куда будет примонтирован в контейнере
+--rm - удалить при остановке
+
+
+Dockerfile:
+
+FROM ubuntu:latest				- образ:версия
+MAINTAINER					- создатель (необязательно)
+RUN apt-get update -qy				- выполнить команду при запуске
+COPY ./папка_откуда_копируем ./куда_копируем	- скопировать паппку с компа в контейнер
+WORKDIR dir_name				- рабочая папка в контейнере
+ENV request_delay=10000				- переменные окружения
+RUN pip intall -r requirements.txt		- установка зависимостей
+CMD ["python3", "manage.py"]			- выполнить команду из папки WORKDIR
+VOLUME какие-то параметры			- волюмы (разобраться)
+EXPOSE 80					- открыть 80 порт контейнера
+
+
+Создать образ:
+docker build -t name:v1 dockerfile-dir-path
+name:v1 		---- задать имя образа и версию
+dockerfile-dir-path 	---- абсолютный путь до dockerfile'a
+
+Запустить образ:
+docker run -d -p 443:80 image-name
+443 	---- порт на хосте
+80 	---- порт в контейнере
+
+
+
+
+
+
+
+
