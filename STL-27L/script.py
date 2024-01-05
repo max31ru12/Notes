@@ -1,23 +1,16 @@
 import serial
 from pprint import pprint
-from utils import parse_data, interpolation, from_pt_to_coordinates, plot_points
-
-port = "COM3"
-baudrate = 921600
-data_length = 8
-stop_bits = serial.STOPBITS_ONE
-parity = serial.PARITY_NONE
-flow_control = False
+from utils import parse_data, interpolation, from_pt_to_coordinates, plot_points, Settings
 
 
 def main():
     # Initializing COM3 port
-    ser = serial.Serial(port,
-                        baudrate=baudrate,
-                        stopbits=stop_bits,
-                        bytesize=data_length,
-                        parity=parity,
-                        xonxoff=flow_control)
+    ser = serial.Serial(Settings.port,
+                        baudrate=Settings.baudrate,
+                        stopbits=Settings.stop_bits,
+                        bytesize=Settings.data_length,
+                        parity=Settings.parity,
+                        xonxoff=Settings.flow_control)
 
     result = {}
     graphic_data = []

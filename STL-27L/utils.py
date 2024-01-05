@@ -1,6 +1,17 @@
 from PointCloud import PointCloud
 import math
 import matplotlib.pyplot as plt
+import serial
+
+
+class Settings:
+
+    port = "COM3"
+    baudrate = 921600
+    data_length = 8
+    stop_bits = serial.STOPBITS_ONE
+    parity = serial.PARITY_NONE
+    flow_control = False
 
 
 def parse_data(data_sixteen: str):
@@ -31,7 +42,9 @@ def parse_data(data_sixteen: str):
 
 
 def interpolation(point_cloud: dict, start_angle: float, end_angle: float) -> dict:
-
+    '''
+    Функция интерполяции точек по углу
+    '''
     if 'error' not in point_cloud.keys():
         if len(point_cloud) > 2: # Это костыль нужен тогда, когда в измерении всего одна точка
             step = (end_angle - start_angle) / (len(point_cloud) - 1)
