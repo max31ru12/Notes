@@ -1,8 +1,0 @@
-Получаем количество записей из модели article, связанных с каждой записью из модели category
-
-article_category - имя, указанное в related_name
-если не указывать related_name, то в Count() передает article_set
-
-Category.objects.annotate(article_count=Count('article_category'))
-
-annotate() - допобавляет поле к таблице, принимает в **kwargs имя поля и значение

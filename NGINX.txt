@@ -19,6 +19,10 @@
 
 		КОНФИГУРАЦИОННЫЙ ФАЙЛ
 
+upstream django:8000 {
+    server django:8000;
+}
+
 server {
     listen 80;
     server_name 192.168.55.107;
