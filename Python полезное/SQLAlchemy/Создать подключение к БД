@@ -1,0 +1,53 @@
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+class Settings(BaseSettings):
+    DB_HOST: str
+    ...
+
+    # Свойство для синхронного подключения
+    @property
+    def DATABASE_URL_psycopg(self):
+        # postgresql+psycopg://postgres_user_name:user_passwd@host:port/db_name
+        # postgresql(название СУБД)+psycopg(название библиотеки)
+        return f"postgresql+psycopg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+
+    model_config = SettingsConfigDict(env_file=".env")
+
+    @property
+    def DATABASE_URL_asyncpg(self):
+        return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+
+
+settings = Settings()
+
+from sqlalchemy import create_engine, text
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
+
+
+Создаем синхронный/асинхронный движок (для асинхронного движка просто указывам аснихронную библиотеку)
+sync_engine = create_engine(
+    # f"postgresql+psycopg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+    url=settings.DATABASE_URL_psycopg,      # настройка сверху (можно посмотреть в доке)
+    echo=True,                              # Выводит запросы в консоль
+)
+
+# через этот объект создаем таблицы
+metadata_obj = MetaData()
+metadata.create_all(sync_engine) # Создаем
+metadata.drop_all(sync_engine) #Удаляем
+
+# Создаем синхронную и асинхронную сессии и передаем туда движок
+session_factory = sessionmaker(sync_engine)
+async_session_factory = async_sessionmaker(async_engine)
+
+# создаем объект Base
+class Base(DeclarativeBase):
+    pass
+
+# Дальше используем контекстный менеджер либо для движка, либо для сессии
+with session_factory() as session:
+    ...
+
+with sync_engine.connect() as conn:
+    ...

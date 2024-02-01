@@ -1,0 +1,26 @@
+Отладочный режим
+
+в программе: asincios.run(coroutine(), debug=True)
+
+в консоли: python3 -X dev program.py
+
+в перменной окружения: PYTHONASYINCIODEBUG=1 python3 program.py
+
+
+async - определяет асинхронную функцию
+await - говорит о том, что мы ждем выполнения корутины (или задачи)
+      - синхронная штука применительно к корутинам
+
+        СОЗДАТЬ ЗАДАЧУ
+
+task = asyncio.create_task(coroutine()) - ставит задачу для конкуретного выполнения корутины
+
+        ВЫПОЛНИТЬ ЗАДАЧУ
+
+result = await task - выполняет задачу
+task.cancel() - отменяет задачу
+
+        ЗАДАЧА С ТАЙМЕРОМ
+
+result = await asyncio.wait_for(task, timeout=5) - отводит на выполнение задачи 5 секунд
+result.cancelled()                               - BOOL (отменена ли задача)
