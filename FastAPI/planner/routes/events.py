@@ -1,7 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, Request, status
-from models.events import Event, EventUpdate
+from fastapi import APIRouter, Depends, HTTPException, status
+from models.models import Event, EventUpdate
 from typing import List
-from sqlmodel import select
 from beanie import PydanticObjectId
 from database.connection import Database
 from auth.authenticate import authenticate

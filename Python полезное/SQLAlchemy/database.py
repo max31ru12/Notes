@@ -35,4 +35,9 @@ async_session_factory = async_sessionmaker(async_engine)
 
 # Base.metadata - это вместо MetaData()
 class Base(DeclarativeBase):
-    pass
+
+    # Этот методы можно написать и в моделях для красивого вывода
+    def __repr__(self):
+        # Это просто крутой способ вывести все параметры с их значениями
+        cols = [f"{col} = {getattr(self, col)}" for col in self.__table__.columns.keys()]
+        return f"<{self.__class__.__name__} {', '.join(cols)}>"

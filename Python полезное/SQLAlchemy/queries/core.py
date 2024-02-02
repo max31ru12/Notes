@@ -1,6 +1,6 @@
-from models import metadata_obj, workers_table
+from models.models import metadata_obj, workers_table
 from database import sync_engine, async_engine
-from sqlalchemy import text, insert, select, update
+from sqlalchemy import insert, select, update
 
 
 def create_tables():

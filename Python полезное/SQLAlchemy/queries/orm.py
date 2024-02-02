@@ -1,6 +1,8 @@
-from sqlalchemy import text, insert, select, update, func, cast, Integer, and_
+from sqlalchemy import insert, select, update, func, cast, Integer, and_
 from database import sync_engine, async_engine, session_factory, async_session_factory, Base
-from models import metadata_obj, WorkersOrm, ResumesOrm
+from sqlalchemy.orm import joinedload, selectinload
+from models.models import WorkersOrm, ResumesOrm
+from sqlalchemy.orm import aliased
 
 
 # это синхронная операция (никаой запрос в БД не отправляет), поэтому без await
@@ -29,7 +31,7 @@ class SyncOrm:
             session.commit()
 
     @staticmethod
-    def select_workers(worker_id: int):
+    def select_workers(worker_id: int = 1):
         with session_factory() as session:
             # Получаем одного работника
             # Передаем сначала таблицу (объект), а затем первичный ключ
@@ -41,14 +43,44 @@ class SyncOrm:
             # вернет список кортежей: [(object_addr_1, ), (object_addr_2, ), ...]
             # workers = result.all()
             # вернет список объектов [object_addr_1, object_addr_2, object_addr_3, ...]
-            workers = result.scalars.all()
+            # workers = result.scalars.all() # почему-то не работает
+            workers = result.all()  # почему-то не работает
             print(f"{workers=}")
+
+    @staticmethod
+    def select_resumes():
+        with session_factory() as session:
+            query = select(ResumesOrm)
+            result = session.execute(query)
+            resumes = result.all()
+            print(f"{resumes=}")
 
     @staticmethod
     def update_worker(worker_id: int, new_username: str):
         with session_factory() as session:
             worker = session.get(WorkersOrm, worker_id)
             worker.username = new_username
+            session.commit()
+
+    @staticmethod
+    def add_additional_workers():
+        with session_factory() as session:
+            workers = [
+                {"username": "Artem"},  # id 3
+                {"username": "Roman"},  # id 4
+                {"username": "Petr"},  # id 5
+            ]
+            resumes = [
+                {"title": "Python программист", "compensation": 60000, "workload": "fulltime", "worker_id": 1},
+                {"title": "Machine Learning Engineer", "compensation": 70000, "workload": "parttime", "worker_id": 1},
+                {"title": "Python Data Scientist", "compensation": 80000, "workload": "parttime", "worker_id": 2},
+                {"title": "Python Analyst", "compensation": 90000, "workload": "fulltime", "worker_id": 2},
+                {"title": "Python Junior Developer", "compensation": 100000, "workload": "fulltime", "worker_id": 3},
+            ]
+            w_query = insert(WorkersOrm).values(workers)
+            r_query = insert(ResumesOrm).values(resumes)
+            session.execute(w_query)
+            session.execute(r_query)
             session.commit()
 
     @staticmethod
@@ -77,6 +109,62 @@ class SyncOrm:
             res = session.execute(query)
             result = res.all()
             print(result)
+
+    @staticmethod
+    def join_resumes_on_workers():
+        with session_factory() as session:
+            # Оконная функция
+            # avg(r.compensation) OVER (PARTITION BY workload)::int AS avg_workload_compensation
+            # Задаём алиасы для таблиц
+            r = aliased(ResumesOrm)
+            w = aliased(WorkersOrm)
+            # join_query это уже таблица, поэтому необходимо обращаться join_query.c.имя_столбца (c - column)
+            join_query = select(
+                r, w, func.avg(r.compensation).over(partition_by=r.workload).cast(Integer).label("avg_workload_compensation")
+            ).join(r, r.worker_id == w.id)
+            result = session.execute(join_query)
+            result = result.all()
+            print(f"{result=}")
+
+    # Ленивый запрос к базе (без JOIN'ов) - вдруг резюме не пригодится
+    # Нельзя использовать ленивую подгрузку в асинхронном коде
+    @staticmethod
+    def select_workers_with_lazy_relationship():
+        with session_factory() as session:
+            query = select(WorkersOrm)
+            # Запрос
+            res = session.execute(query)
+            result = res.scalars().all()
+            # Тут проблема N+1
+            worker_1_resumes = result[0].resumes # происходит запрос
+            print(f"{worker_1_resumes=}")
+
+            worker_2_resumes = result[1].resumes # происходит запрос
+            print(f"{worker_2_resumes=}")
+
+    @staticmethod
+    def select_workers_with_joined_relationship():
+        with session_factory() as session:
+            # Происходит большой запрос с JOIN'ми
+            query = select(WorkersOrm).options(joinedload(WorkersOrm.resumes))
+            res = session.execute(query)
+            # Делается на уровне Алхимии, чтобы были только уникальные первичные ключи
+            result = res.unique().scalars().all()
+            # Получаем вложенную структуру данные result[0].resumes
+            worker_2_resumes = result[1].resumes # происходит запрос
+            print(f"{worker_2_resumes=}")
+
+    @staticmethod
+    def select_workers_with_selectin_relationship():
+        with session_factory() as session:
+            # Происходит большой запрос с JOIN'ми
+            query = select(WorkersOrm).options(selectinload(WorkersOrm.resumes))
+            res = session.execute(query)
+            # Делается на уровне Алхимии, чтобы были только уникальные первичные ключи
+            result = res.unique().scalars().all()
+            # Получаем вложенную структуру данные result[0].resumes
+            worker_2_resumes = result[1].resumes # происходит запрос
+            print(f"{worker_2_resumes=}")
 
 
 class AsyncOrm:
@@ -109,6 +197,13 @@ class AsyncOrm:
             print(f"{workers=}")
 
     @staticmethod
+    async def select_resumes():
+        async with async_session_factory() as session:
+            query = select(ResumesOrm)
+            resumes = await session.execute(query)
+            print(resumes)
+
+    @staticmethod
     async def update_worker(worker_id: int, new_username: str):
         async with async_session_factory() as session:
             query = update(WorkersOrm).values(username=new_username).filter_by(id=worker_id)
@@ -130,3 +225,40 @@ class AsyncOrm:
             result = await session.execute(query)
             res = result.all()
             print(res)
+
+    @staticmethod
+    async def add_additional_workers():
+        async with async_session_factory() as session:
+            workers = [
+                {"username": "Artem"},  # id 3
+                {"username": "Roman"},  # id 4
+                {"username": "Petr"},  # id 5
+            ]
+            resumes = [
+                {"title": "Python программист", "compensation": 60000, "workload": "fulltime", "worker_id": 1},
+                {"title": "Machine Learning Engineer", "compensation": 70000, "workload": "parttime", "worker_id": 1},
+                {"title": "Python Data Scientist", "compensation": 80000, "workload": "parttime", "worker_id": 2},
+                {"title": "Python Analyst", "compensation": 90000, "workload": "fulltime", "worker_id": 2},
+                {"title": "Python Junior Developer", "compensation": 100000, "workload": "fulltime", "worker_id": 3},
+            ]
+            workers_query = insert(WorkersOrm).values(workers)
+            resumes_query = insert(ResumesOrm).values(resumes)
+            await session.execute(workers_query)
+            await session.execute(resumes_query)
+            await session.commit()
+
+    @staticmethod
+    async def join_resumes_on_workers():
+        async with async_session_factory() as session:
+            r = aliased(ResumesOrm)
+            w = aliased(WorkersOrm)
+            join_query = select(
+                r,
+                w,
+                func.avg(r.compensation).over(partition_by=r.workload).cast(Integer).label("avg_workload_compensation")
+            ).join(r, r.worker_id == w.id)
+            result = await session.execute(join_query)
+            result = result.all()
+            print(f"{result=}")
+
+

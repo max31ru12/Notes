@@ -1,0 +1,13 @@
+# func.функция_из_СУБД (типа AVG(), SUM())
+# cast(объект, тип (импорт типа из sqlalchemy))
+# label("avg_compensation") - создать alias (AS avg_compensation)
+# and_ - для объединения условий с помощью AND
+# .contains("Python")
+# .having(...)
+
+query = (select(ResumesOrm.workload, cast(func.avg(ResumesOrm.compensation), Integer).label("avg_compensation"))
+        # Можно не указывать явно таблицу с помощью .select_from(ResumesOrm)
+        .select_from(ResumesOrm)
+        .filter(and_(ResumesOrm.title.contains("Python"), ResumesOrm.compensation > 40000,))
+        .group_by(ResumesOrm.workload)
+)

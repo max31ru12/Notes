@@ -1,0 +1,41 @@
+alembic init migrations - создать папку миграций
+
+
+prepend_sys_path - надо отредактировать (указать папку, где находится папка миграций)
+# prepend_sys_path = . path_to_migrations_dir
+
+
+В файле alembic.ini необходимо поменять переменную sqlalchemy.url.
+Для этого необходимо в файле env.py прописать следующую конструкцию:
+
+config.set_main_option("sqlalchemy.url", settings.DATABASE_URL_asyncpg)
+# Для асинхронной библиотеки:
+config.set_main_option("sqlalchemy.url", settings.DATABASE_URL_asyncpg + "?async_fallback=True")
+
+В том же файле:
+from models.models import *            # обязательно надо импортировать модели
+from database import Base
+
+target_metadata = Base.metadata
+
+Также стоит сделать такую вещь в файле env.py:
+    with connectable.connect() as connection:
+        context.configure(
+            connection=connection,
+            target_metadata=target_metadata,
+            compare_server_default=True         # добавили эту строчку
+        )
+
+
+
+   Создать миграции:
+alembic revision --autogenerate                     - id миграции находится в имени
+alembic revision --autogenerate -m "migration2"     - добавить "migration2 к id миграции"
+    Произвести миграции:
+alembic upgrade head            - (вместо head можно указать id миграции)
+
+    Откатить все миграции:
+alembic downgrade base          - (вместо base можно указать id миграции)
+
+
+

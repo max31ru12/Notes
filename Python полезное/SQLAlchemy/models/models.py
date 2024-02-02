@@ -1,12 +1,10 @@
 import datetime
 import enum
-from typing import Annotated
+from typing import Annotated, List
 
 from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, func, text
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from database import Base
-
 
 # Mapped - позволяет использовать типы
 # mapped_column() - позволяет устанавливать первичный ключ,
@@ -30,11 +28,36 @@ updated_at = Annotated[datetime.datetime, mapped_column(server_default=text("TIM
 
 # Декларативный стиль определения таблицы
 class WorkersOrm(Base):
+    # У класс Base можно переопределить метод __repr__
+    # для того, чтобы модели выводились красиво
     __tablename__ = "workers"
 
     id: Mapped[intpk]
     # можно не указывать mapped_column
     username: Mapped[str] = mapped_column()
+
+    resumes: Mapped[list["ResumesOrm"]] = relationship(
+        back_populates="worker",
+        # неявное указание (это устарело)
+        # backref="worker"
+    )
+    # можно также сделать resumes_parttime
+    resumes_parttime: Mapped[list['ResumesOrm']] = relationship(
+        back_populates="worker",
+        # обычный JOIN выполянтеся
+        # это позволяет сделать так: query = select(WorkersOrm).options(joinedload(WorkersOrm.resumes_parttime))
+        primaryjoin="and_(WorkersOrm.id == ResumesOrm.worker_id, ResumesOrm.workload == parttime)"
+    )
+
+    def __repr__(self):
+        return f"<Worker: {self.username}>"
+
+
+# Пример добавления воркера и резюме:
+# все эти вещи прекрасно работают
+# worker = WorkersOrm(username='Max')
+# worker.resumes.append(ResumesOrm(...))
+# worker.resumes[0].worker
 
 
 # перечисление двух графиков работы (типа выбор из существующих)
@@ -62,11 +85,45 @@ class ResumesOrm(Base):
     updated_at: Mapped[datetime.datetime] = mapped_column(server_default=text("TIMEZONE('utc', now())"),
                                                           onupdate=datetime.datetime.utcnow)
 
-# class WorkersOrm(Base):
-#     __tablename__ = "workers"
-#
-#     id = Column(Integer, primary_key=True)
-#     username = Column(String)
+    worker: Mapped["WorkersOrm"] = relationship(
+        # Ссылаемся на resumes из модели WorkersOrm
+        back_populates="resumes"
+    )
+
+    vacancies_replied: Mapped[list["VacanciesOrm"]] = relationship(
+        back_populates="resumes_replied",
+        secondary="vacancies_replies"
+    )
+
+
+class VacanciesOrm(Base):
+    __tablename__ = "vacancies"
+
+    id: Mapped[intpk]
+    title: Mapped[str]
+    compensation: Mapped[int | None]
+
+    # связь М:М
+    resumes_replied: Mapped[list["ResumesOrm"]] = relationship(
+        back_populates="vacancies_replied",
+        # указываем таблицу, через которую связана модель vacancies с моделью resumes
+        secondary="vacancies_replies"
+    )
+
+
+class VacanciesRepliesOrm(Base):
+    __tablename__ = "vacancies_replies"
+
+    resume_id: Mapped[int] = mapped_column(
+        ForeignKey("resumes.id", ondelete="CASCADE"),
+        primary_key=True
+    )
+    vacancy_id: Mapped[int] = mapped_column(
+        ForeignKey("vacancies.id", ondelete="CASCADE")
+    )
+
+    cover_letter: Mapped[str | None]
+
 
 
 # # Здесь хранится инфомрация о всех таблицах, которые мы создали из python'а
