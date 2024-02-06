@@ -1,0 +1,20 @@
+---- from fastapi import Cookie ----
+
+@app.get("/items/")
+async def read_items(ads_id: Annotated[str | None, Cookie()] = None):
+    return {"ads_id": ads_id}
+
+---- обязательно надо использовать Cookie, иначе они будут считаться обычными параметрами запроса
+
+
+
+---- from fastapi import Header ----
+
+---- В данном случае будет необходимо указывать в Headers |token: some_value|
+---- передать его в query_params не получится
+
+@auth_router.get("/users")
+async def get_users(token: Annotated[str | None, Header(...)]):
+    print(token)
+    users = await select_all_users()
+    return users

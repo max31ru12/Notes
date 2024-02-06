@@ -1,0 +1,8 @@
+Request-параметры:
+- Path()
+- Query()
+- Header()
+- Cookie()
+- Body()
+- Form()
+- File()
