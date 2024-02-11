@@ -49,3 +49,10 @@ class Point2D(Geom):
 from typing import ClassVar
 
 id: ClassVar[int] - переменная относится к классу, а не к объекту
+
+------------------------------------------------------------------------------------------------
+from typing import Annotated
+
+intpk = Annotated[int, mapped_column(primary_key=True)]
+        # int - тип переменной
+        # второй агрумент - это метаинформация о том, что это например mapped_column(primary_key=True)

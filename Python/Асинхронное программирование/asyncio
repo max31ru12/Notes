@@ -4,7 +4,7 @@
 
 Отладочный режим
 
-в программе: asincios.run(coroutine(), debug=True)
+в программе: asyncio.run(coroutine(), debug=True)
 
 в консоли: python3 -X dev program.py
 
@@ -31,3 +31,20 @@ task.cancel() - отменяет задачу
 
 result = await asyncio.wait_for(task, timeout=5) - отводит на выполнение задачи 5 секунд
 result.cancelled()                               - BOOL (отменена ли задача)
+
+
+
+        СОЗДАНИЕ ЗАДАЧ В LIST COMPREHENSIONS
+
+# Создаем список задач, но не вызываем их для выполнения
+tasks = [asyncio.create_task(coroutine) for i in range(3)]
+
+# Здесь отдельно вызываем задачи для КОНКУРЕНТНОГО выполнения
+[await task for task in tasks]
+# Тут происходит создание всех трех, а затем вызов сразу всех трех
+
+
+tasks = [await asyncio.create_task(coroutine) for i in range(3)]
+1) создание + вызов -> LIST COMPREHENSIONS останавливается, задача выполняется
+2) создание + вызов -> LIST COMPREHENSIONS останавливается, задача выполняется
+3) создание + вызов -> LIST COMPREHENSIONS останавливается, задача выполняется
