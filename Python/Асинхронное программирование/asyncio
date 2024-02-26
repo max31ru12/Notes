@@ -86,7 +86,20 @@ for finished_task in asyncio.as_completed(*tasks):
 # Позволяет обрабатывать задачи по мере их выполнения
 
 
+        АСИНХРОННЫЕ ГЕНЕРАТОРЫ
+# генератор - обычная функция, только вместо return - yield
+# асинхронный генератор - асихронная функция с yield !!!
+# асинхронный генератор вызывается без await
+# асинхронный генератор не работает с next() и for in
 
+async def positive_integers(until: int):
+    for integer in range(until):
+        yield integer
 
+# Асинхронный генератор используется только с async for !!!!
+async for number in positive_integers(4):
+    print(f"{number=}")
 
+# АСИНХРОННЫЙ ГЕНЕРАТОР порождает сопрограммы,
+# но выполняются они НЕ КОНКУРЕНТНО !!!!
 

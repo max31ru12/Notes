@@ -1,0 +1,9 @@
+apt:
+
+apt-get 		- обращение к менеджеру
+apt-get install		- установить пакет
+apt-get remove		- удалить пакет
+apt-cache policy vim	- поиск пакета в ОС
+apt-cache search vim	- поиск пакета в стандартном репозитории
+
+apt-get upgrade		- обноваить приложения/пакеты
