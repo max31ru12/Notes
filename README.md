@@ -21,4 +21,10 @@ A repository with notes, useful links and tutorials how to do smth
 
 ### [Виды JOIN'ов](https://antonz.ru/sql-join/)
 
+Отличный ресурс по SQL с тренажерами
+
+## [SQL-Academy](https://sql-academy.org/ru)
+
+## [Работа с пользователями Postgres](https://www.dmosk.ru/miniinstruktions.php?mini=postgresql-users)
+
 
