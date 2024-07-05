@@ -8,6 +8,8 @@ A repository with notes, useful links and tutorials how to do smth
 
 ### [REST naming](https://restfulapi.net/resource-naming/)
 
+### [Спорные моменты REST](https://habr.com/ru/articles/770226/)
+
 ### [Status codes specification (semantics)](https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.2)
 
 ### [HTTP specification](https://datatracker.ietf.org/doc/html/rfc9110#name-client-error-4xx) 
@@ -27,4 +29,13 @@ A repository with notes, useful links and tutorials how to do smth
 
 ## [Работа с пользователями Postgres](https://www.dmosk.ru/miniinstruktions.php?mini=postgresql-users)
 
+
+## Loguru - простой логгер
+
+https://pypi.org/project/loguru/
+
+
+## CRDT
+
+[Очень крутой видос про CRDT](https://www.youtube.com/watch?v=r5G2iWZguo4&list=WL&index=8&t=16s)
 

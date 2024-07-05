@@ -120,3 +120,24 @@ sio.save_session(sid, session={"name": name})
 ```py
 [await] sio.get_session(sid).get("name")
 ```
+
+
+## Клиент SocketIO
+
+```py
+import socketio
+
+# Создание клиента сокета
+sio = socketio.SimpleClient()
+
+# Подключение к серверу
+sio.connect('ws://0.0.0.0:80')
+```
+
+Получить или отправить сообшение
+
+```py
+event, data = sio.receive()
+
+sio.emit("send_message", {"text": "hello"})
+```
