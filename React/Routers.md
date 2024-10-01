@@ -118,3 +118,24 @@ const router = createBrowserRouter([
 ### Client Side Routing: `Link` 
 
 `Link` позволяет обновлять **URL** так, чтобы браузер не запрашивал новый документ, а ре-рендерил поверх старого документа
+
+
+### URL params
+
+#### Как это выглядит в роутере:
+
+```js
+...
+{
+    path: "contacts/:contactId",
+}
+```
+
+Обращаться к параметрам можно с помощью `params.contactId` в следующем `loader'е`:
+
+```js
+export async function loader({ params }) {
+  const contact = await getContact(params.contactId);
+  return { contact };
+}
+```
