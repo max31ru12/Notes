@@ -130,25 +130,25 @@ Dockerfile:
 
 
 ```dockerfile
-FROM ubuntu:latest					# образ:версия
+FROM ubuntu:latest			    # образ:версия
 
-MAINTAINER							# создатель (необязательно)
+MAINTAINER				    # создатель (необязательно)
 
-RUN apt-get update -qy				# выполнить команду при запуске
+RUN apt-get update -qy			    # выполнить команду при запуске
 
-COPY ./откуда ./куда				# скопировать паппку с компа в контейнер
+COPY ./откуда ./куда			    # скопировать паппку с компа в контейнер
 
-WORKDIR dir_name					# рабочая папка в контейнере
+WORKDIR dir_name			    # рабочая папка в контейнере
 
-ENV request_delay=10000				# переменные окружения
+ENV request_delay=10000			    # переменные окружения
 
-RUN pip intall -r requirements.txt	# установка зависимостей
+RUN pip intall -r requirements.txt          # установка зависимостей
 
-CMD ["python3", "manage.py"]		# выполнить команду из папки WORKDIR
+CMD ["python3", "manage.py"]		    # выполнить команду из папки WORKDIR
 
-VOLUME какие-то параметры			# волюмы (разобраться)
+VOLUME какие-то параметры		    # волюмы (разобраться)
 
-EXPOSE 80							# открыть 80 порт контейнера
+EXPOSE 80				    # открыть 80 порт контейнера
 
 ```
 
@@ -170,7 +170,7 @@ networks:
 docker network create inserservice-network
 ```
 
-Такая сеть позволяет объндинить сервисы из разных docker-compose файлов.
+Такая сеть позволяет объединить сервисы из разных docker-compose файлов.
 
 
 

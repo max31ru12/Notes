@@ -1,25 +1,24 @@
-# Декораторы функции
+def decorator(iters):
+    def actual_decorator(func):
+        import time
 
-# Это имя функции-декоратора, в качестве аргумента передается имя функции
-# которую мы оборачиваем в декоратор
-def decorator_function(func):
-    # Это функция-обертка, здесь происходят какие-то вещи, а затем вызывается оборачиваемая функция
-    def wrapper():
-        print('Функция-обёртка!') # Какое-то действие
-        print('Оборачиваемая функция: {}'.format(func)) # Какое-то действие
-        print('Выполняем обёрнутую функцию...') # Какое-то действие
-        func() # Здесь происходит вызов оборачиваемой функции
-        print('Выходим из обёртки') # Какое-то действие
-    return wrapper
+        def wrapper(*args, **kwargs):
+            total_time = 0
+            for i in range(iters):
+                start = time.time()
+                func(*args, **kwargs)
+                total_time += time.time() - start
+            print(f"Function {func.__name__} completed in {total_time}")
 
+        return wrapper
 
-# Оборачиваем функцию в декоратор (следующаяя строчка - имя декоратора)
-@decorator_function
-# дальше идет функция, которая оборачивается
-def some_func():
-    pass
+    return actual_decorator
 
 
-some_func()
+@decorator(2)
+def wait_time():
+    time.sleep(1)
+
+decorator(iters=2)(wait_time)()
 
 

@@ -38,6 +38,7 @@ reportWebVitals();
 
 ```js
 import { useRouteError } from "react-router-dom";
+import { Link }
 
 
 export default function ErrorPage() {
@@ -80,6 +81,8 @@ const router = createBrowserRouter([
 
 2. Добавить дочерний элемент в первый маршрут
 
+    `<Outlet />` компонент - это компонент, в котором будут рендериться дочерние компоненты, т.е. `children`
+
     - добавить в `root.jsx` компонент `<Outlet />`
 
         ```js
@@ -97,7 +100,7 @@ const router = createBrowserRouter([
         }
         ```
     
-    - добавить дочерний элемент в уже существующий роутер
+    - добавить дочерний элемент в уже существующий роутер (с сохранением контекста)!!!
 
         ```js
         const router = createBrowserRouter([
@@ -119,6 +122,10 @@ const router = createBrowserRouter([
 
 `Link` позволяет обновлять **URL** так, чтобы браузер не запрашивал новый документ, а ре-рендерил поверх старого документа
 
+```js
+<Link to="/">Home<Link/>
+```
+
 
 ### URL params
 
@@ -128,14 +135,25 @@ const router = createBrowserRouter([
 ...
 {
     path: "contacts/:contactId",
+    element: < />
 }
 ```
 
-Обращаться к параметрам можно с помощью `params.contactId` в следующем `loader'е`:
+#### Использование параметров в компоненте
+
+`useParams` вернет все параметры, доступные для этой страницы
 
 ```js
-export async function loader({ params }) {
-  const contact = await getContact(params.contactId);
-  return { contact };
+import { useParams } from "react-router-dom";
+
+
+export default function ContactPage() {
+    const params = useParams();
 }
+```
+
+**TypeScript** типизация для `useParams`:
+
+```js
+const params = useParams<{ profileId: string }>();
 ```
