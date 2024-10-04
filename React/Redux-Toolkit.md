@@ -141,3 +141,114 @@ export function Counter() {
 }
 ```
 
+
+
+# Redux API
+
+## createReducer
+
+`builder` реализует `addCase`, `addMatcher`, `addDefaultCase`.
+
+```js
+import { createReducer, createAction } from '@reduxjs/toolkit'
+
+const increment = createAction('counter/increment')
+const decrement = createAction('counter/decrement')
+const incrementByAmount = createAction('counter/incrementByAmount')
+
+const initialState = { value: 0 }
+
+const counterReducer = createReducer(initialState, (builder) => {
+    builder
+        .addCase(increment, (state, action) => {
+            state.value++
+        })
+        .addCase(decrement, (state, action) => {
+            state.value--
+        })
+        .addCase(incrementByAmount, (state, action) => {
+            state.value += action.payload
+        })
+        .addDefaultCase((state, action) => {})
+})
+```
+
+## Методы builder'а
+
+### `addCase`
+
+Добавляет кейс (аналог case в switch) для обработки одного `action type`
+
+`addCase` - должен идти перед `addMatcher` и перед `addDefaultCase`.
+
+### `addMatcher`
+
+Позволяет сравнить входящие `actions` со своим собственным фильтром.
+
+Должны быть определены строго после всех `addCase`
+
+
+
+```js
+function isActionWithNumberPayload(action) {
+    return typeof action.payload === "number"
+}
+
+builder.addMatcher(isActionWithNumberPayload, (state, action) => {})
+```
+
+
+### `addDefaultCase`
+
+
+
+# Thunks
+
+## thunk creation
+
+```js
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { userAPI } from '/userAPI'
+
+const fetchUserById = createAsyncThunk(
+    'users/fetchByIdStatus',
+    async (userId: number, thunkAPI) => {
+        const response = await userAPI.fetchById(userId)
+        return response.data
+    },
+)
+
+initialState = {
+    entities: [],
+    loading: 'idle',
+}
+
+const usersSlice = createSlice({
+    name: 'users',
+    inititalState,
+    reducers: {
+        // reducer logic
+    },
+    extraReducers: (builder) => {
+        builder.addCase(fetchUserById.fulfilled, (state, action) => {
+            // Меняем state
+            state.entites.push(action.payload)
+        })
+    },
+})
+```
+
+`createAsyncThunk` принимает 3 параметра:
+
+1. `type`: строка, например `'users/requestStatus'`, которая генерирует дополнительные action-констатнты
+    - `pending`: `'users/requestStatus/pending'`
+    - `fulfilled`: `'users/requestStatus/fulfilled'`
+    - `rejected`: `'users/requestStatus/rejected'`
+2. `payloadCreator`: callback-функция, которая возвращает **promise**.
+Этот **promise** хранит в себе результаты какой-то асинхронной логики
+либо возвращает ошибку. `payloadCreator` принимает 2 аргумента:
+    - `arg`:
+    - `thunkAPI`: содержит в себе все функции, которые содержат в себе **thunks**
+
+
+
