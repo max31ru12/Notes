@@ -204,7 +204,55 @@ builder.addMatcher(isActionWithNumberPayload, (state, action) => {})
 
 # Thunks
 
-## thunk creation
+Нужны (в основном) для асинхронного запроса к бэку
+
+## Thunk creation
+
+
+### Очень простой пример создания thunk'а
+
+#### Создание `thunk`
+
+```js
+export const fetchPerson = createAsyncThunk("person/fetch", async (thunkAPI) => 
+    const response = await fetch(
+        "http://localhost:8000/person", {method: "GET"}
+        );
+    const data = response.json();
+    return data;
+);
+```
+
+В данном случае то, что вернет функция внутри параметров `createAsyncThunk` - это то, что будет использоваться в `Slice'ах` через `action.payload`;
+
+#### Использование `thunk'а` 
+
+Подключаются `thunks` в `slice'ы` через параметр `extraReducers`:
+
+```js
+export const PersonSlice(
+    initialState,
+    reducers: {
+        addPerson: (state, action) => {
+            state.persons.push(...);
+        } 
+    },
+    extraReducers: (builder) => {
+        // fetchPerson - это thunk
+        builder.addCase(fetchPerson.fulfilled, (state, action) => {
+            state.persons = action.payload;
+        });
+    },
+)
+
+
+export default PersonSlice.reducer;
+```
+
+Можно использовать это `thunk` как, как fetchPerson 
+
+
+### Еще один пример
 
 ```js
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
@@ -232,13 +280,18 @@ const usersSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(fetchUserById.fulfilled, (state, action) => {
             // Меняем state
+            // payload - это то, что возвращает асинхронная функция (второй параметр)
             state.entites.push(action.payload)
         })
     },
 })
 ```
 
-`createAsyncThunk` принимает 3 параметра:
+- `thunkAPI` - обязательный параметр
+- `userId` - дополнительный параметр
+
+
+`createAsyncThunk` принимает 2 параметра:
 
 1. `type`: строка, например `'users/requestStatus'`, которая генерирует дополнительные action-констатнты
     - `pending`: `'users/requestStatus/pending'`
