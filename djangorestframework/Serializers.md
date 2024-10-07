@@ -79,3 +79,21 @@ class SomeSerializer(...):
 # [Serializers Relations](https://www.django-rest-framework.org/api-guide/relations/)
 
 Поля сериализаторов для связанных моделей и как они отображаются в JSON 
+
+
+1. SlugRelatedField - выброка из связанной модели любого поля
+
+```py
+field = serializers.SlugRelatedField(slug_field="field_name", many=True, read_only=True)
+```
+
+`slug_field` - это поле в связанной модели, например, для **DictionarySerializer**:
+
+**Dictionary : Objects === М : 1**
+
+```py
+obj_code = serialaizers.SlugRelatedField(slug_field="obj", ...)
+```
+
+`obj` - это поле из модели **Objects**
+
