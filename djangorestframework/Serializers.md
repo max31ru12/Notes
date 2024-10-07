@@ -97,3 +97,9 @@ obj_code = serialaizers.SlugRelatedField(slug_field="obj", ...)
 
 `obj` - это поле из модели **Objects**
 
+2. PrimaryKeyRelatedField
+
+```py
+obj = serializers.PrimaryKeyRelatedField(many=False, read_only=True)
+```
+
