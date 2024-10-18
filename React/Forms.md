@@ -1,5 +1,9 @@
 # Формы
 
+### [Супер-статья про формы в React](https://www.freecodecamp.org/news/how-to-build-forms-in-react/)
+
+- контролируемый input
+- множественный input в форме
 
 ### Контролируемый `input`
 
