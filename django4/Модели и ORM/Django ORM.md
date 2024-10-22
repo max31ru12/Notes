@@ -143,14 +143,14 @@ Women.objects.get(pk=1).cat  # Дополнительный SQL-запрос
 # Без указания related_name в поле ForeignKey
 Category.objects.get(pk=1).women_set.all()
 
-# Если указан related_name
+# Если указан related_name="posts"
 Category.objects.get(pk=1).posts.all()
 ```
 
 > В данном случае `women_set` и `posts` - это **менеджеры**
 
 
-## select_related()
+## `select_related()`
 
 Извлекает данные связанной модели с помощью `JOIN`
 
@@ -176,3 +176,68 @@ e = Model.objects.select_related("related_model").get(id=5)
 b = e.re;atrd_model
 ```
 
+
+
+## `prefetch_related()`
+
+То же самое, что и `select_related`, но для связи **Many-to-Many** 
+
+
+Например, есть такие модели:
+
+```py
+from django.db import models
+
+
+class Topping(models.Model):
+    name = models.CharField(max_length=30)
+
+
+class Pizza(models.Model):
+    name = models.CharField(max_length=50)
+    toppings = models.ManyToManyField(Topping)
+
+    # Этот методе для каждой модели Pizza дергает БД и извлекает связанные модели Topping
+    def __str__(self):
+        return "%s (%s)" % (
+            self.name,
+            ", ".join(topping.name for topping in self.toppings.all()),
+        )
+```
+
+
+Использование:
+
+```py
+Pizza.objects.prefetch_related("toppings")
+
+# затем уже можно работпть с QuerySet'ами, так как данные prefetch_related уже в КЭШе 
+...
+```
+
+### Пример с несколкими связанными моделями
+
+```py
+class Restaurant(models.Model):
+    pizzas = models.ManyToManyField(Pizza, related_name="restaurants")
+    best_pizza = models.ForeignKey(
+        Pizza, related_name="championed_by", on_delete=models.CASCADE
+    )
+```
+
+Выборка с помощью prefetch_related:
+
+```py
+Restaurant.objects.prefetch_related("pizza__toppings")
+```
+
+Такой запрос выберет все пиццы, принадлежащие ресторанам и все топпинги, принадлежащие этим пиццам. Причес сделает это в 3 запроса:
+
+- Запрос для `Restaurant`
+- Запрос для `Pizza`
+- Запрос для `Topping`
+
+> Можно сократить до двух запросов (посмотреть доку)
+
+
+# Транзакции в Django
