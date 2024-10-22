@@ -50,7 +50,7 @@ Model.objects.all() # выбрать все записи
 
 Model.objects.all()[1] # Выбрать вторую запись 
 
-Model.objects.all[1:4] # Срез
+Model.objects.all()[1:4] # Срез
 ```
 
 ### Фильтрация записей
@@ -150,6 +150,29 @@ Category.objects.get(pk=1).posts.all()
 > В данном случае `women_set` и `posts` - это **менеджеры**
 
 
+## select_related()
 
+Извлекает данные связанной модели с помощью `JOIN`
 
+### Standart lookup:
+
+```py
+# Hits the database
+e = Model.objects.get(id=5)
+
+# Hits the database again
+b = e.related_model
+```
+
+### `select_related` lookup
+
+`select_related` можно использовать с любой **QuerySet'ом** объектов
+
+```py
+# Hits the db
+e = Model.objects.select_related("related_model").get(id=5)
+
+# dont hits the db
+b = e.re;atrd_model
+```
 

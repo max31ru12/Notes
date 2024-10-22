@@ -4,6 +4,7 @@
 
 - контролируемый input
 - множественный input в форме
+- валидация форм
 
 ### Контролируемый `input`
 
@@ -54,5 +55,40 @@ class Ccomponent extends Component {
     }
 }
 ```
+
+
+### Валидация ошибок
+
+```ts
+function MyForm(){
+    [inputValue, setInputValue] = useState("")
+    [inputError, setInputError] = useState(null)
+
+    function handleInputChange(event) => {
+        const value = event.target.value
+        setInputValue(value)
+
+        if (value.length >= 5){
+            // submit form
+        } else {
+            setInputError('Input must be lesst than 5 characters')
+        }
+    }
+
+    return (
+        <form>
+            <label>
+                <input type="text" value={inputValue} onChange={handleInputChange}>
+            </label>
+            {inputError && <div>{ inputError }</div>}
+        </form>
+    )
+}
+
+```
+
+## Uncontrolled components: хук `useRef`
+
+
 
 
