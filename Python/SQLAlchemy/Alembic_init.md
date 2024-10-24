@@ -31,7 +31,7 @@ Set path to alembic directory
 Set the following options
 
 ```python
-# Async version
+# Async version (Добавить строчку)
 config.set_main_option("sqlalchemy.url", DB_URL + "?async_fallback=True")
 
 # Sync version 
