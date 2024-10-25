@@ -241,3 +241,61 @@ Restaurant.objects.prefetch_related("pizza__toppings")
 
 
 # Транзакции в Django
+
+> [Документация](https://docs.djangoproject.com/en/5.1/topics/db/transactions/)
+
+### В доке есть:
+
+- обработка ошибок
+- выполненией действий после коммита транзакции
+- **savepoint** - консистентное состояние перед транзакцией, к которому можно откатиться: `savepoints()`
+
+### Как декоратор
+
+```py
+from dajngo.db import transaction
+
+@transcation.atomic
+def viewfunc(request):
+    # Код происходит внутри транзакции
+    do_stuff()
+```
+
+
+### Как контекстный менеджер
+
+```py
+from django.db import transaction
+
+def viewfunc(request):
+    # Здесь код происходит в режиме АВТО КОММИТА
+    do_stuff()
+    with transaction.atomic():
+        # Этот код выполняется внутри транзакции
+        do_stuff_in_transaction()
+```
+
+
+
+Необходимо вручную возращать поля объекта в момент до выполнянения транзакции, если транзакция не выполнилась:
+
+```py
+from django.db import DatabaseError, transaction
+
+obj = MyModel(active=False)
+obj.active = True
+try:
+    with transaction.atomic():
+        obj.save()
+except DatabaseError:
+    obj.active = False
+
+if obj.active:
+    ...
+```
+
+Это надо делать потому, что транзакция не поменяла состояние БД, но поменяла состояние инстансов моделей, которые пыталась изменить транзакция.
+
+# Использование `F()` - объекта
+
+Позволяет выполнять операции с БД, используя текущие значение полей. Используется тогда, тогда есть риск конфликтов при выполнении параллельных запросов.
