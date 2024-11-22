@@ -1,0 +1,126 @@
+ОБРАБОТКА ОШИБОК В ЗАДАЧАХ - глава 3.5.3
+СИГНАЛЫ                    - глава 3.6 (в Windows нет сигналов) https://stackoverflow.com/questions/35772001.
+
+
+Отладочный режим
+
+в программе: asyncio.run(coroutine(), debug=True)
+
+в консоли: python3 -X dev program.py
+
+в перменной окружения: PYTHONASYINCIODEBUG=1 python3 program.py
+
+
+async - определяет асинхронную функцию
+await - говорит о том, что мы ждем выполнения корутины (или задачи)
+      - синхронная штука применительно к корутинам
+
+        СОЗДАТЬ ЗАДАЧУ
+
+task = asyncio.create_task(coroutine()) - ставит задачу для конкуретного выполнения корутины
+
+        ВЫПОЛНИТЬ ЗАДАЧУ
+
+result = await task - выполняет задачу
+task.cancel() - отменяет задачу
+
+!!! Когда задача снимается, вызывается исключение CancelledError,
+в точке, где программа ждет ее с помощью await !!!
+
+        ЗАДАЧА С ТАЙМЕРОМ
+
+result = await asyncio.wait_for(task, timeout=5) - отводит на выполнение задачи 5 секунд
+result.cancelled()                               - BOOL (отменена ли задача)
+
+
+        СОЗДАНИЕ ЗАДАЧ В LIST COMPREHENSIONS
+
+# Создаем список задач, но не вызываем их для выполнения
+tasks = [asyncio.create_task(coroutine) for i in range(3)]
+
+# Здесь отдельно вызываем задачи для КОНКУРЕНТНОГО выполнения
+[await task for task in tasks]
+# Тут происходит создание всех трех, а затем вызов сразу всех трех
+
+
+tasks = [await asyncio.create_task(coroutine) for i in range(3)]
+1) создание + вызов -> LIST COMPREHENSIONS останавливается, задача выполняется
+2) создание + вызов -> LIST COMPREHENSIONS останавливается, задача выполняется
+3) создание + вызов -> LIST COMPREHENSIONS останавливается, задача выполняется
+
+
+        ПЕРЕДАТЬ НА ВЫПОЛНЕНИЕ СПИСОК КОРУТИН
+
+# asyncio.gather(*coroutines) оборачивает кажду корутину в задачу и ждет
+# ждёт выполнения всех задач, а затем возвращает список результатов всех задач
+
+coroutines = [coroutine() for i in range(1000)]
+results = await asyncio.gather(*coroutines)
+
+аргументы, принимаетмые gather()
+1) return_exceptions=True - сохранит исключение корутины как результат ее выполения
+                    =False - просто вызовет ошибку
+
+# Пример использования
+async def main_gather():
+    urls = [url for i in range(1000)]
+    async with aiohttp.ClientSession() as session:
+        requests = [session.get(l_url) for l_url in urls]
+        status_codes = await asyncio.gather(*requests)
+
+asyncio.run(main_gather())
+
+
+        ОБРАБОТКА РЕЗУЛЬТАТОВ ПО МЕРЕ ПОСТУПЛЕНИЯ (as_completed)
+
+tasks = [coroutine_1(), coroutine_2(), coroutine_3()]
+
+# Как только задача выполнилась, она нам возвращается
+# Порядок завершения задач не известен!!!
+for finished_task in asyncio.as_completed(*tasks):
+    ...
+
+
+        ФУНКЦИЯ asyncio.wait с.119-с.128
+
+# Позволяет обрабатывать задачи по мере их выполнения
+
+
+        АСИНХРОННЫЕ ГЕНЕРАТОРЫ
+# генератор - обычная функция, только вместо return - yield
+# асинхронный генератор - асихронная функция с yield !!!
+# асинхронный генератор вызывается без await
+# асинхронный генератор не работает с next() и for in
+
+async def positive_integers(until: int):
+    for integer in range(until):
+        yield integer
+
+# Асинхронный генератор используется только с async for !!!!
+async for number in positive_integers(4):
+    print(f"{number=}")
+
+# АСИНХРОННЫЙ ГЕНЕРАТОР порождает сопрограммы,
+# но выполняются они НЕ КОНКУРЕНТНО !!!!
+
+
+
+        Asyncio и потоки
+
+1) call_soon_threadsafe - принимает функция python (не сопрограмму) и потокобезопасным образом
+планирует ее выполнение на следующей итерации цикла событий (метод цикла событий)
+2) asyncio.run_coroutine_threadsafe - принимает сопрограмму, потокобезопасным образом подает ее
+для выполнения и сразу же возвращает будущий объект, который позволет получить доступ к результату
+
+Важно, что этот будущий объект является не будущим объектом
+asyncio, а экземпляром класса future из модуля concurrent.futures.
+
+БУДУЩИЕ ОБЪЕКТЫ asyncio - ПОТОКОНЕБЕЗОПАСНЫ
+БУДУЩИЕ ОБЪЕКТЫ concurrent.futures. - ПОТОКОБЕЗОПАСНЫ
+
+
+
+
+
+
+

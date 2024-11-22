@@ -1,0 +1,11 @@
+from pydantic import BaseModel, EmailStr
+
+
+class User(BaseModel):
+    email: EmailStr
+
+    class Config:
+	# позволяет работать не как со словарём, а как с ORM-моделью, 
+	# то есть делать так: data.email вместо data["email"]
+	orm_mode = True # было переименовано в from_attributes
+	

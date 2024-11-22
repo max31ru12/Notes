@@ -1,0 +1,24 @@
+		ОРГАНИЗАЦИЯ СВЯЗИ МНОГИЕ-КО-МНОГИМ
+
+class Product(models.Model):
+    name = models.CharField(max_length=256, verbose_name='Имя продукта')
+    usage_count = models.IntegerField(default=0, verbose_name='Кол-во использований')
+
+class Dish(models.Model):
+    name = models.CharField(max_length=256)
+    products = models.ManyToManyField(Product, through='RecipeProduct') # через какую таблицу
+
+class RecipeProduct(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    recipe = models.ForeignKey(Dish, on_delete=models.CASCADE)
+    weight = models.IntegerField()
+
+
+
+
+
+
+		СLASS META
+
+class Meta:
+    unique_together = ('product', 'recipe')			- сочетание указанных полей должно быть уникальным

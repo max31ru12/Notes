@@ -1,0 +1,57 @@
+poetry init - инициализировать пакетный менеджер poetry в папке 
+	    - если уже есть какой-то проект и хотим добавить poetry
+
++ЭТИ ФАЙЛЫ НАДО ДОБАВЛЯТЬ В РЕПОЗИТОРИЙ
+
+pyproject.toml: автоматически создается файл
+poetry.lock: 	позволяет гораздо быстрее работать с установкой пакетов
+_______________________________________________________________________
+
+poetry new tmp - создается структура проекта:
+---- pyproject.toml
+---- README.rst
+---- test
+        __init__.py
+	test_tmp.py
+---- tmp
+	__init__.py
+
+	Poetry для виртуального окружения: 
+
+poetry env use python3.11 	- создать виртуальное окржение (в какой-то жопе где-то)
+poetry shell 			- активировать виртуальное окружение
+exit				- выйти из evn
+poetry run uvicorn		- запустить команду (или Python, например) из evn
+
+poetry run python manage.py runserver - так можно джангу запустить
+poerty run gunicorn 		      - так gunicorn
+
+	Poetry, библиотеки и зависимости:
+
+УСТАНОВЛЕННЫЕ БИБЛИОТЕКИ САМИ ЗАПИСЫВАЮТСЯ В ФАЙЛ pyproject.toml
+
+poetry add requests 		- установить библиотеку requests
+poetry add requests@version	- установить пакет определнной версии
+
+poetry add --dev requests	- установить библиотеку для разработки (в раздел dev-dependencies)
+
+
+poetry show --latest		- версии пакетов и их более новые (если они есть)
+
+
+	Скрипты в Poetry
+
+Добавляется в файл pyproject.toml:
+
+[tool.poetry.scripts]
+somecommand = "tmp.main:run" - функция запускается при вызове poetry run somecommand
+			     - то есть запускается файл tmp/main.py функция run()
+
+
+
+
+	
+
+
+
+
