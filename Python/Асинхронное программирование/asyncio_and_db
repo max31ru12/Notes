@@ -1,7 +1,0 @@
-СОЗДАТЬ ПУЛ ПОДКЛЮЧЕНИЙ:
-
-pool: Pool = await asyncpg.create_pool() # передает host, db и прочее
-
-ЗАКРЫТЬ ПУЛ ПОДКЛЮЧЕНИЙ: pool.close()
-
-

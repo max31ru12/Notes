@@ -89,7 +89,23 @@ function MyForm(){
 
 ## Uncontrolled components: хук `useRef`
 
-### Пример использования формы с useRef:
+### Правильная типизация `useRef` и `event`
+
+```ts
+const inputUsername = useRef<HTMLInputElement>(null);  
+const inputPassword = useRef<HTMLInputElement>(null);  
+  
+function handleSubmit(event: React.FormEvent<HTMLFormElement>): void {  
+    event.preventDefault();  
+    const formData: AuthData = {  
+        username: inputUsername.current?.value ?? "",  
+        password: inputPassword.current?.value ?? "",  
+  
+    }  
+}
+```
+
+### Пример использования формы с `useRef`:
 
 ```ts
 export default function SkillCreateForm() {

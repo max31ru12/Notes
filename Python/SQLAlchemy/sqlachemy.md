@@ -13,21 +13,21 @@ engine = create_async_engine(url=f"postgresql+asyncpg://user:password@host:port/
 
 2. Создаем метаданные
 
-```py
+```python
 from sqlachemy import MetaData
 
 metadata = MetaData()
 ```
 
 Вариант через `declarative_base`
-```py
+```python
 from sqlalchemy.orm import declarative_base()
 
 Base = declarative_base()  # затем наследуем Base в моделях 
 ```
 
 Вариант через класс
-```py
+```python
 from sqlachemy.orm import DeclarativeBase
 
 class Base(DeclarativeBase):  # класс Base родитель для таблиц
@@ -72,7 +72,7 @@ res.scalars().all()            # список объектов (читабель
 
 # Поля таблицы
 
-```py
+```python
 class User(Base):
     __tablename__ = "users"
 
@@ -81,7 +81,7 @@ class User(Base):
 ```
 
 Можно использовать общие поля с помощью `Annotated`:
-```py
+```python
 intpk = Annotated[int, mapped_column(primary_key=True)]  # общее поле
 
 id: Mapped[intpk] = ...  # в таблице
@@ -92,7 +92,7 @@ id: Mapped[intpk] = ...  # в таблице
 
 ## Core
 
-```py
+```python
 from sqalchemy import insert
 
 stmt = insert(table).values(name="", ...)
@@ -100,7 +100,7 @@ stmt = insert(table).values(name="", ...)
 
 ## ORM
 
-```py
+```python
 # Синхронный вариант
 with session_factory() as session:
     session.add(user_obj)
@@ -115,7 +115,7 @@ async with async_session_factory() as session:
 
 # Выборка данных
 
-```py
+```python
 from sqlalchemy import select
 
 # можно указывать несколько условий в формате table.c.column ==
@@ -123,7 +123,7 @@ select(table).where(table.c.name == "Test", ...)
 ```
 
 ### Выборка столбцов, алиасы
-```py
+```python
 # Выборка двух полей таблицы
 select(table.c.column_1, table.c.column_2)
 # Объединить две колонки
@@ -138,7 +138,7 @@ select(table.c.column).label("ALIAS")
 - `in_([1, 2, ...])`
 
 ### Условия AND и OR
-``` py
+``` python
 select(table).where(or_(conditions))  # OR
 
 select(table).where(and_(conditions))  # AND
@@ -146,7 +146,7 @@ select(table).where(and_(conditions))  # AND
 
 ### Сортировка `ORDER BY`
 
-```py
+```python
 # первый вариант
 select(table).order_by(table.c.column)  # ASC
 # второй вариант (ИМХО БОЛЕЕ ЛАКОНИЧНЫЙ)
@@ -159,7 +159,7 @@ select(table).order_by(table.c.column.desc())  # DESC
 ```
 
 ### Группировка `GROUP BY`
-```py
+```python
 # всё как у order_by
 select(table).group_by("column")
 ```
@@ -169,7 +169,7 @@ select(table).group_by("column")
 Есть также `outerjoin()`, `outerjoin_from()`
 
 #### Явное задание двух таблиц для соединения
-```py
+```python
 # Указываем обе таблицы (без условия)
 select(table_1.c.email, table_2.c.name).join_from(table_1, table_2)
 # Явно указываем условия
@@ -177,25 +177,25 @@ select(...).join_from(table_1, table_2, table_1.c.id == table_2.c.user_id)
 ```
 
 #### 
-```py
+```python
 select(table_1, table_2).join(table_2)
 ```
 
 ## Удаление и обновление (UPDATE, DELETE)
 
 **UPDATE** - обновление данных
-```py
+```python
 update(table).where(table.c.column == "...").values(column="new")
 ```
 
 **DELETE** - удаление данных
-```py
+```python
 stmt = delete(table).where(condition)  # удаление
 conn.execute(stmt).rowcount  # кол-во удаленных строчек
 ```
 
 **RETURNING** - есть у INSERT, UPDATE, DELETE
-```py
+```python
 delete(table).where(condition).returning(table.c.column)
 ```
 дальше пременяем scalars, all и тд.
@@ -211,7 +211,7 @@ delete(table).where(condition).returning(table.c.column)
 
 **Без фабрики:**
 
-```py
+```python
 from sqlachemy.orm import Session
 
 with Session(engine) as session:
@@ -220,7 +220,7 @@ with Session(engine) as session:
 
 **Фабрика сессий:**
 
-```py
+```python
 # from sqlachemy.ext.asyncio import async_sessionmaker
 from sqlachemy.orm import sessionmaker 
 
@@ -247,7 +247,7 @@ with session() as session:
 
 ## Вставка данных с помощью сессий
 
-```py
+```python
 # Синхронный вариант
 with session_factory() as session:
     session.add(user_obj)
@@ -266,8 +266,6 @@ async with async_session_factory() as session:
 # Relationships
 
 [Видео по связям в SQLAchemy](https://www.youtube.com/watch?v=kFp9fdv9i_I&list=PLN0sMOjX-lm5Pz5EeX1rb3yilzMNT6qLM&index=10)
-
-
 
 ## Lazy Load (N + 1 Problem)
 
