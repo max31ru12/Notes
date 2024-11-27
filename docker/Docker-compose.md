@@ -1,60 +1,57 @@
-В качестве хоста в python-программах указываем имя сервиса: То есть, если хотим подключиться к БД postgres, то 
-имя сервиса, например, postgres. Указываем host="postgres", docker дальше сам всё сделает.
+В качестве хоста в python-программах указываем имя сервиса: То есть, если хотим подключиться к БД **postgres**, то имя сервиса, например, **postgres**. Указываем `host="postgres"`, docker дальше сам всё сделает.
 
+## Полезные команды
 
-version: "3.5"				-версия docker-compose
+### Запустить в фоновом режиме с указанием пути до compose-файла
 
-services:				-перечисляем сервисы
-  web-server:				-имя сервиса
-    image: nginx:latest			-образ
-    build: dockerfile_relative_path	-создать образ из докер-файла
-    container_name: mynginx   		-имя контейнера
-    volumes:				-волюмы
-      - /opt/web/html:/var/www/html	-локальная_директория:директория_в_контейнере
+```bash
+docker compose -f ./compose.yml up --build -d
+```
 
-    volumes:
-      - ..:/code            - грубо говоря, compose берет изменения из директории пониже (или указанной, если указывать)
-                            и переносит их в папку code в контейнере (вроде как отслеживает изменения)
-      - static_volume:/folder_in_container  - используем общий волюм
-    env_file:
-      - .env_file_name
-    environment:			-переменные окружения
-      - NGINX_PORT=80
-      - NGINX_USER=${user}		- берется из файла .env
-      - NGINX_HOST=myhost		
-    ports:				-проброс портов (порт_хоста:порт_контейнера)
-      - "80:80"
-      - "443:443"
-    restart: unless-stopped		-что делать с контейнером при остановке
-    depends_on:				-запуск контейнера после запуска перечисленных контейнеров
-      - app-db				-имена контейнеров (тоже в файле)
-      - postgres
+## Контекст для сервисов
+Контекст для каждого сервиса указывается в разделе **build**.
 
-# Докер будет сам где-то хранить эти волюмы, сам выберет имя и место для них 
-# на случай, когда не нужно содержимое этих директорий, но нужно их пошарить между контейнерами
-volumes:				-объявляем общие волюмы
+```yml
+services: 
+  app: 
+	build: 
+	  context: ./app 
+	  dockerfile: Dockerfile
+```
+
+## Volumes
+ Докер будет сам где-то хранить эти волюмы, сам выберет имя и место для них на случай, когда не нужно содержимое этих директорий, но нужно их пошарить между контейнерами
+
+```yml
+volumes:
   static_volume:
   media_volume:
+```
 
-
-
-networks:				-Описывает сети
-  default				-стандартная сеть для контейнера
+## Сети
+```yml
+networks:				
+  default:
     name: webnet
     driver: bridge
-  internet:
-    name: appnet
-    driver: bridge
+```
 
+## Переменные окружения
 
-ПРО ПЕРЕМЕННЫЕ ОКРУЖЕНИЯ
+Переменные окружения будут браться из файла `.env`, который располагается по тому же пути, что и файл `docker-compose.yml`:
+```yml
+environment:
+  - NGINX_PORT=80
+  - NGINX_USER=${user} # берется из файла .env
+  - NGINX_HOST=myhost
+```
 
-Данная запись значит, что перменные окружения будут браться из файла .env, который располагается
-по тому же пути, что и файл docker-compose.yml
+## Healthcheck
 
-    environment:
-      - SECRET_KEY=${SECRET_KEY}
-      - DEBUG=${DEBUG}
-      - DB_NAME=${DB_NAME}
-
-
+```yml
+healthcheck:
+  test: ["CMD-SHELL", "pg_isready -U username"]
+  interval: 30s
+  timeout: 10s
+  retries: 5
+```

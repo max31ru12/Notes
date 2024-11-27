@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "5dd5ee28d7b5b469",
+        "id": "4d4d753280eb4b5d",
         "type": "tabs",
         "children": [
           {
-            "id": "5a32321f7a4d71aa",
+            "id": "c6cf35e542ce7193",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "React/Основное.md",
+                "file": "Devops/GitHub actions.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Основное"
+              "title": "GitHub actions"
             }
           }
         ]
@@ -162,34 +162,36 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "5a32321f7a4d71aa",
+  "active": "ac768bb40d1b56b8",
   "lastOpenFiles": [
+    "Python/poetry.md",
+    "Python/pydantic.md",
+    "Python/pytest.md",
+    "Python/сделать исполняемый python-файл (скрипт).md",
+    "docker/Docker.md",
+    "Devops/GitHub actions.md",
+    "docker/Docker-compose.md",
+    "windows убить процесс на порту.md",
+    "Базы данных/Postgres/postgres_docker_file.md",
+    "docker/FastAPI+poetry+db.md",
+    "docker/Python-with-poetry.md",
+    "docker/docker-compose django-nginx.md",
+    "Untitled",
+    "Devops",
+    "JavaScript/Продвинутый JS.md",
+    "JavaScript/axios.md",
+    "JavaScript/TypeScript.md",
+    "React/Основное.md",
     "React/React Router.md",
     "React/Forms.md",
     "React/Redux-Toolkit.md",
     "React/RTK-TypeScript.md",
-    "React/Основное.md",
     "React/Rendiring lists.md",
     "React/Hooks.md",
     "React/Fecth.md",
     "React/Components.md",
     "django/Модели и ORM/Migrations.md",
     "django/Postgres в Django. Выгрузка существующих данных.md",
-    "django/Модели и ORM/Managers.md",
-    "Flexbox.md",
-    "Python/SQLAlchemy/sqlachemy.md",
-    "Python/SQLAlchemy/Alembic_init.md",
-    "FastAPI/Основное.md",
-    "FastAPI/FastAPI + SQLAlchemy configuration.md",
-    "FastAPI/Полезные ссылки.md",
-    "FastAPI/Dependencies.md",
-    "FastAPI/extra datatypes.md",
-    "FastAPI/Handling errors.md",
-    "FastAPI/Headers и Cookie.md",
-    "FastAPI/Security.md",
-    "FastAPI/Описание модели Pydantic.md",
-    "FastAPI/Параметры пути, запроса и body.md",
-    "FastAPI/Работа с Response.md",
     "Базы данных/Postgres",
     "Базы данных/NoSQL",
     "Базы данных",
@@ -207,8 +209,6 @@
     "docker/nginx-conf-d/nginx.conf",
     "docker/nginx-conf-d/dockerfile",
     "docker/nginx-conf-d",
-    "docker",
-    "djangorestframework",
-    "django4/Модели и ORM/Модели.txt"
+    "docker"
   ]
 }
