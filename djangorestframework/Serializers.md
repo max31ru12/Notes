@@ -1,12 +1,28 @@
 ## [Замена днищенской доки для DRF](https://www.cdrf.co/)
 
-## Парс JSON - JSONParser
 
-```py
-JSONParser.renser()  # JSON-строка в байтах
+## Валидация данных с помощью сериализаторов
 
-JSONparser()  # из JSON-строки в байтах в Python DataTypes
+### Валидация с помощью `ModelSerializer`
+
+```python
+def endpoint(request):
+	queryset = Model.objects.all()
+	json_data = ModelSerializer(queryset).data
+	return Response(json_data)
 ```
+
+### Валидация приходящих данных
+
+```python
+def ...
+	serializer = ModelSerializer(data=request.data)
+	if serializer.is_valid(): ...
+	else:
+		return Response(serializer.error, 
+					    status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+```
+
 
 ## Создание и изменение объектов в сериалайзерах
 
