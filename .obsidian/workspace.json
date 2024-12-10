@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Рабочее/Колонки таблицы EditableTable.md",
+                "file": "Python/Регулярные выражения.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Колонки таблицы EditableTable"
+              "title": "Регулярные выражения"
             }
           }
         ]
@@ -165,9 +165,12 @@
   },
   "active": "80a259a0c0fde428",
   "lastOpenFiles": [
+    "Рабочее/Зависимости бэкенд.md",
+    "Python/Регулярные выражения.md",
     "git.md",
     "Рабочее/Колонки таблицы EditableTable.md",
-    "Flexbox.md",
+    "HTML CSS",
+    "HTML CSS/Flexbox.md",
     "Рабочее",
     "djangorestframework/APIViews and ViewSets.md",
     "React/Основное.md",
@@ -191,8 +194,6 @@
     "JavaScript/TypeScript.md",
     "React/React Router.md",
     "React/Forms.md",
-    "React/RTK-TypeScript.md",
-    "React/Rendiring lists.md",
     "Базы данных/Postgres",
     "Базы данных/NoSQL",
     "Базы данных",
@@ -209,7 +210,6 @@
     "images",
     "docker/nginx-conf-d/nginx.conf",
     "docker/nginx-conf-d/dockerfile",
-    "docker/nginx-conf-d",
-    "docker"
+    "docker/nginx-conf-d"
   ]
 }
