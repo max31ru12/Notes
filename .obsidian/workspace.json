@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "b4fdedc208f0d32e",
+        "id": "708d0c861c002b08",
         "type": "tabs",
         "children": [
           {
-            "id": "80a259a0c0fde428",
+            "id": "85e44924339984aa",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Python/Регулярные выражения.md",
+                "file": "React/Жизненный цикл компонентов.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Регулярные выражения"
+              "title": "Жизненный цикл компонентов"
             }
           }
         ]
@@ -163,17 +163,21 @@
       "terminal:Open terminal": false
     }
   },
-  "active": "80a259a0c0fde428",
+  "active": "85e44924339984aa",
   "lastOpenFiles": [
-    "Рабочее/Зависимости бэкенд.md",
-    "Python/Регулярные выражения.md",
+    "React/Основное.md",
+    "React/Жизненный цикл компонентов.md",
     "git.md",
+    "Рабочее/Локализация.md",
+    "HTML CSS/Flexbox.md",
+    "HTML CSS/Display.md",
+    "images/display properties.png",
+    "Python/Регулярные выражения.md",
+    "Рабочее/Зависимости бэкенд.md",
     "Рабочее/Колонки таблицы EditableTable.md",
     "HTML CSS",
-    "HTML CSS/Flexbox.md",
     "Рабочее",
     "djangorestframework/APIViews and ViewSets.md",
-    "React/Основное.md",
     "djangorestframework/Serializers.md",
     "React/Redux-Toolkit.md",
     "JavaScript/axios.md",
@@ -191,9 +195,6 @@
     "docker/docker-compose django-nginx.md",
     "Devops",
     "JavaScript/Продвинутый JS.md",
-    "JavaScript/TypeScript.md",
-    "React/React Router.md",
-    "React/Forms.md",
     "Базы данных/Postgres",
     "Базы данных/NoSQL",
     "Базы данных",
@@ -206,7 +207,6 @@
     "images/Pasted image 20241119140525.png",
     "images/Pasted image 20241119141207.png",
     "images/Pasted image 20241119140516.png",
-    "images/Pasted image 20241119140428.png",
     "images",
     "docker/nginx-conf-d/nginx.conf",
     "docker/nginx-conf-d/dockerfile",
