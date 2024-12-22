@@ -1,5 +1,3 @@
-# How to configure alembic
-
 
 ## Configuration 
 
@@ -66,10 +64,6 @@ alembic downgrade base
 ```shell
 docker compose -f .\local.yml run --rm backend alembic current
 ```
-
-
-
-
 
 ## Конфликт Alembic с ручным созданием таблиц
 
