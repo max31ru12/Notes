@@ -1,4 +1,4 @@
-```docker
+```dockerfile
 FROM python:3.9-slim as base
 LABEL maintainer="Make <maxevg72@gmail.com"
 

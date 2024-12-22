@@ -46,10 +46,29 @@ async def create_tables():
     async with engine.begin() as conn:
         await conn.run_sync(meta_data.create_all)
 ```
+
 Метадату можно взять из `Base.metadata`
 
+4. Создать `sessionmaker`
+
+```python
+from sqlalchemy.ext.asyncio import async_sessionmaker
+
+async_session = async_sessionmaker(bind=async_engine)
+```
 
 
+5. Создать все таблицы (Для FastAPI)
+
+```python
+from app.setup_db import async_engine, Base
+
+
+@app.on_event("startup")  
+async def init_database():  
+    async with async_engine.begin() as connection:  
+        await connection.run_sync(Base.metadata.create_all)
+```
 
 
 # Результаты выполнения

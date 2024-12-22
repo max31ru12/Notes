@@ -17,7 +17,7 @@ alembic init alembic-dir-name
 
 ### File `alembic.ini`
 
-Rewrite (set database url)
+Rewrite (set database url). Лучше не трогать, а задать через `env.py` :
 
 `sqlalchemy.url = driver://test:test@localhost:5432/test`
 
@@ -55,8 +55,30 @@ Migrate:
 alembic upgrade head
 ```
 
-Roll back all migrations:
+Откатить все миграции:
 
 ```shell
 alembic downgrade base
 ```
+
+Посмотреть текущую примененную миграцию:
+
+```shell
+docker compose -f .\local.yml run --rm backend alembic current
+```
+
+
+
+
+
+## Конфликт Alembic с ручным созданием таблиц
+
+Для управления БД с помощью Alembic не стоит вручную создавать базу данных с помощью:
+
+```python
+@app.on_event("startup")  
+async def init_database():  
+    async with async_engine.begin() as connection:  
+        await connection.run_sync(Base.metadata.create_all)
+```
+
