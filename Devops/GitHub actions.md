@@ -1,9 +1,23 @@
 
-`workflow` - процесс, который запускает одну или несколько `job`, расположены в **.github/workflows**. 
+`workflow` - процесс, который запускает одну или несколько `job`, расположены в папке **.github/workflows/**.  
 
 ## Workflows
 
 Все workflows хранятся в папке **.github/workflows**. [Дока про написание workflows](https://docs.github.com/en/actions/writing-workflows/about-workflows#understanding-the-workflow-file)
+
+
+## При каких действиях выполнять `workflow`
+
+```yml
+on:  
+  push:  
+    branches: [ main ]  
+  pull_request:  
+    branches: [ main ]
+```
+
+- при пуше
+- при пулл реквесте
 
 ## Jobs
 
