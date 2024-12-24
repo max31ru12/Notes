@@ -1,5 +1,3 @@
-# Django ORM
-
 ## Создание объекта
 
 ### 1 вариант
@@ -22,21 +20,21 @@ w1.save() # добавить объект в БД
 
 Метод `update` сразу изменяет состояние БД
 
-```py
+```python
 Model.objects.update(name="New value")  # для всех объектов
 
 Model.objects.filter(pk__lte=4)  # для первых четырех записей
 ```
 
 `update` не работает для срезов типа: 
-```py
+```python
 Model.objects.all()[:4].update  # Error
 ```
 
 
 ## Удаление записей
 
-```py
+```python
 Model.objects.filter(pk__gte=5).delete()  # Удаление записей
 ```
 
@@ -45,7 +43,7 @@ Model.objects.filter(pk__gte=5).delete()  # Удаление записей
 
 Выборка записей таким образом возвращает `QuerySet`
 
-```py
+```python
 Model.objects.all() # выбрать все записи
 
 Model.objects.all()[1] # Выбрать вторую запись 
@@ -85,14 +83,14 @@ Models.objects.get(**filters) # выбирает одну запись или г
 
 #### Исключить записи из полной выборки
 
-```py
+```python
 Model.objects.exclude(**filter)
 ```
 
 
 ### Сортировка записей
 
-```py
+```python
 Model.objects.all().order_by("field_name")
 # Второй вариант
 Model.objects.order_by("field_name")
@@ -100,7 +98,7 @@ Model.objects.order_by("field_name")
 
 #### Сортировка наоборот:
 
-```py
+```python
 Model.objects.order_by("-title")
 ```
 
@@ -119,10 +117,25 @@ class Model(...):
         ordering = ["-id", "title"]
 ```
 
+### Функции агрегации SUM(), AVG(), COUNT(), MIN(), MAX()
+
+Базовый пример нахождения максимального значения по столбцу:
+
+```python
+from django.db.models import Max
+
+Model.objects.aggregate(Max(price))
+# или
+Model.objects.all().aggregate(Max(price))
+```
+
+В результате получится словарь вида:
+
+`{"price__max": 400}`
 
 ## Связанные модели
 
-```py
+```python
 class Category(models.Model):
     ...
 
@@ -133,7 +146,7 @@ class Women(models.Model):
 
 ### Выбрать связанную с записью в `Women` категорию
 
-```py
+```python
 Women.objects.get(pk=1).cat  # Дополнительный SQL-запрос
 ```
 
@@ -168,12 +181,12 @@ b = e.related_model
 
 `select_related` можно использовать с любой **QuerySet'ом** объектов
 
-```py
+```python
 # Hits the db
 e = Model.objects.select_related("related_model").get(id=5)
 
 # dont hits the db
-b = e.re;atrd_model
+b = e.related_model
 ```
 
 
@@ -185,7 +198,7 @@ b = e.re;atrd_model
 
 Например, есть такие модели:
 
-```py
+```python
 from django.db import models
 
 
@@ -208,14 +221,14 @@ class Pizza(models.Model):
 
 Использование:
 
-```py
+```python
 Pizza.objects.prefetch_related("toppings")
 
 # затем уже можно работпть с QuerySet'ами, так как данные prefetch_related уже в КЭШе 
 ...
 ```
 
-### Пример с несколкими связанными моделями
+### Пример с несколькими связанными моделями
 
 ```py
 class Restaurant(models.Model):
