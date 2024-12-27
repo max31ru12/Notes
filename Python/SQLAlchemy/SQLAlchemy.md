@@ -6,8 +6,15 @@
 ```python
 from sqlalchemy.ext.asyncio import create_async_engine
 
-engine = create_async_engine(url=f"postgresql+asyncpg://user:password@host:port/db_name")
+async_engine = create_async_engine(  
+    url=f"postgresql+asyncpg://user:password@host:port/db_name",
+    echo=True,  
+    pool_size=10,  
+    max_overflow=20,  
+)
 ```
+
+10 подключений к БД, + 20 дополнительных при необходимости
 
 Соединение через движок: `async with engine.connect()`
 
@@ -54,8 +61,19 @@ async def create_tables():
 ```python
 from sqlalchemy.ext.asyncio import async_sessionmaker
 
-async_session = async_sessionmaker(bind=async_engine)
+session_factory: async_sessionmaker[AsyncSession] = async_sessionmaker(  
+    bind=async_engine,  
+    autoflush=False,  
+    autocommit=False,  
+    expire_on_commit=False,  
+)
 ```
+
+##### Параметры только для асинхронной алхимии
+
+- `expire_on_commit` - при коммите все модели в сессии помечаются как **expired**, это значит, что при обращении к атрибуту автоматически делается запрос в базу с помощью `await`
+- `autoflush`
+- `autocommit`
 
 
 5. Создать все таблицы (Для FastAPI)
@@ -69,6 +87,29 @@ async def init_database():
     async with async_engine.begin() as connection:  
         await connection.run_sync(Base.metadata.create_all)
 ```
+
+
+### Требования уникальных ограничений
+
+Для того, чтобы в миграция имена ограничений были не `None`, необходимо задать **naming_conventions** в классе **Base**:
+
+```python
+CONVENTION = {  
+    "ix": "ix_%(column_0_label)s",  
+    "uq": "uq_%(table_name)s_%(column_0_name)s",  
+    "ck": "ck_%(table_name)s_%(constraint_name)s",  
+    "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",  
+    "pk": "pk_%(table_name)s",  
+}
+
+class Base(DeclarativeBase):  
+    metadata = MetaData(naming_convention=CONVENTION)
+```
+
+По умолчанию есть convention только для (то есть для первичного ключа)
+
+
+
 
 
 # Результаты выполнения
