@@ -1,4 +1,4 @@
-# Axios with TS
+## Axios with TS
 
 ```ts
 const response = await axios.get<Post[]>(URL)
@@ -9,7 +9,7 @@ const result = response.data // тип переменной result - Post[]
 `<Post[]>` - это ReturnType выполненного запроса (массив объектов Post)
 
 
-# Использование `axios` с `useState` для рендера данных респонса
+## Использование `axios` с `useState` для рендера данных респонса
 
 ```ts
 import React, {useState, useEffect} from "react";
