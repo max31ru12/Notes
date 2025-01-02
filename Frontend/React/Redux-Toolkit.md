@@ -305,8 +305,8 @@ export type RootState = ReturnType<typeof store.getState>
 // Получаем ТИП СОСТОЯНИЯ DISPATCH (какие есть методы, атрибу и т.д.)
 export type AppDispatch = typeof store.dispatch
 
-export const useAppDispatch = useDispatch.withTypwes<appDispatch>()
-export const useAppSelector = useSelector.withtypes<RootState>()
+export const useAppDispatch = useDispatch.withTypes<AppDispatch>()  
+export const useAppSelector = useSelector.withTypes<RootState>()
 ```
 
 `useDispatch` и `useSelector` по умолчанию не знают, какие действия у нас есть, поэтому необходимо получить актуальные типы для `state` и `dispatch`,  а затем сказать `useDispatch` и `useSelector`, что им надо работать с этими типами.

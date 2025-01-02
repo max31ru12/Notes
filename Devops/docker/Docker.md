@@ -45,12 +45,14 @@ docker run -it --rm -v testdata:/data busybox
 
 ```shell
 --env "DB_LINK=env_variable" 
+# ИЛИ
+docker run -d -e "POSTGRES_USER=test" -e "POSTGRES_PASSWORD=test" -e "POSTGRES_DB=test" -p 5432:5432 postgres:alpine
 ```
 
 `DB_LINK` - имя переменной \
-`env_variable` - значение перменной
+`env_variable` - значение переменной
 
-> если несколько перменных, то несколько опций `--env`
+> если несколько переменных, то несколько опций `--env`
 
 ## СОЗДАТЬ ОБРАЗ:
 ```shell

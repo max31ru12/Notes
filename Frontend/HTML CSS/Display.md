@@ -31,9 +31,11 @@
 Одно из использований - **горизонтальное меню**:
 
 ```css
-.nav li {  display: inline-block;  
+.nav li {  
+	display: inline-block;  
 	font-size: 20px;  
-	padding: 20px;}
+	padding: 20px;
+}
 ```
 
 ### Свойство `display: none`
