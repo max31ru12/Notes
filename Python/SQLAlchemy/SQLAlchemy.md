@@ -26,7 +26,8 @@ from sqlachemy import MetaData
 metadata = MetaData()
 ```
 
-Вариант через `declarative_base`
+Вариант через `declarative_base
+`
 ```python
 from sqlalchemy.orm import declarative_base()
 
@@ -121,6 +122,9 @@ res.scalar()                   # выводим сразу строчку без
 res.scalars()                  # много объектов (нечитабельно)
 res.scalars().all()            # список объектов (читабельно)
 
+# Когда возвращается одна запись
+res.scalar_one_or_none() # Вернут None при отсутствии
+res.scalar_one() # Вызовет исключение при отсутствии
 ```
 
 # Метаданные
@@ -146,6 +150,13 @@ intpk = Annotated[int, mapped_column(primary_key=True)]  # общее поле
 
 id: Mapped[intpk] = ...  # в таблице
 ```
+
+
+### Атрибуты mapped_column
+
+- `default` - когда создается на стороне алхимии
+- `server_default` - когда создается на стороне сервера БД (если пишем, например, с помощью чистого SQL-запроса)
+- `nullable` - может быть **NULL**
 
 
 # Вставка данных
@@ -320,30 +331,5 @@ async with async_session_factory() as session:
     await session.commit()
 ```
 
-
-
-
-# Relationships
-
-[Видео по связям в SQLAchemy](https://www.youtube.com/watch?v=kFp9fdv9i_I&list=PLN0sMOjX-lm5Pz5EeX1rb3yilzMNT6qLM&index=10)
-
-## Lazy Load (N + 1 Problem)
-
-Получим записи из таблицы `A`. Пройдемся по полученным записям циклом и для каждой из них делаем отдельный запрос в таблицу `B`, чтобы получить связанные записи из таблицы B для полученных записей из таблицы `A`. 
-
-В результате получается `1 запрос` для таблицы `A` = `N записей` и `N запросов` для таблицы `B` (по одному запросу для каждой полученной записи из таблицы `A`)
-
-
-[Calculate timestamps within your DB, not your client
-For sanity, you probably want to have all datetimes calculated by your DB server, rather than the application server. Calculating the timestamp in the application can lead to problems because network latency is variable, clients experience slightly different clock drift, and different programming languages occasionally calculate time slightly differently.
-
-SQLAlchemy allows you to do this by passing func.now() or func.current_timestamp() (they are aliases of each other) which tells the DB to calculate the timestamp itself.
-
-Use SQLALchemy's server_default
-Additionally, for a default where you're already telling the DB to calculate the value, it's generally better to use server_default instead of default. This tells SQLAlchemy to pass the default value as part of the CREATE TABLE statement.
-
-For example, if you write an ad hoc script against this table, using server_default means you won't need to worry about manually adding a timestamp call to your script--the database will set it automatically.
-
-### [Understanding SQLAlchemy's onupdate/server_onupdate](https://stackoverflow.com/questions/13370317/sqlalchemy-default-datetime)
 
 
