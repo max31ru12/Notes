@@ -20,7 +20,7 @@
 </div>
 ```
 
-Свойство `display: flex` позволяет сделать контейнер **flexible**
+Свойство `display: flex` позволяет сделать контейнер **flexible**. Также позволяет свойству `margin: auto` выравнивать блоки и по вертикали (по умолчанию он выравнивает только по горизонтали)
 
 #### Свойства flex контейнеров:
 - [`flex-direction`](https://www.w3schools.com/css/css3_flexbox_container.asp#flex-direction)
