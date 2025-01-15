@@ -10,6 +10,11 @@
 
 ### B-Tree
 
+#### Операции сравнения
+- больше
+- меньше
+- равно
+
 **B-Tree** is used for searching in the range, ordering and unique constraints. Used for `BETWEEN` and `IN` statements, also `IS NULL` and `IS NOT NULL` can be used with **B-Tree**.
 
 **Example:**
@@ -45,4 +50,33 @@ Hash-index is used when needed to get fast access by equality. Hash doesn't prov
 ```postgresql
 CREATE INDEX ix_example_hash ON example_table USING hash (column_name);
 ```
+
+
+### GiST (generalized search tree)
+
+Это не какой-то определенный тип индекса, а инфраструктура для реализации индекса для произвольных типов данных. 
+
+Можно использовать для данных с размерностью больше одного, в отличие от `b-tree`б который используется для данных с размерностью 1.
+
+сбалансированное дерево поиска, как и `b-tree`, но с поддержкой больше количества операций сравнения. `GiST` сбалансирован по высоте.
+
+#### Когда использовать
+- сложные (составные) индексы
+- пространственные типы данных
+- запросы по диапазону
+
+#### Пример создания
+
+```postgresql
+CREATE TABLE products (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100),
+  description TEXT,
+  price NUMERIC,
+  category VARCHAR(50)
+);
+
+CREATE INDEX idx_products_price_category ON products USING GIST (price, category);
+```
+
 
