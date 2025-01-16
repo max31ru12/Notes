@@ -80,3 +80,40 @@ CREATE INDEX idx_products_price_category ON products USING GIST (price, category
 ```
 
 
+### SP-GiST (Space-Partitioned Generalized Search Tree)
+
+```postgresql
+CREATE INDEX idx_point_spgist ON spatial_table USING spgist (geom);
+```
+
+#### Когда использовать
+- неоднородные данные (например, иерархические)
+- пространственные данные
+- проверка пересечений
+- строковые данные (для поиска подстрок)
+
+
+### GIN (Generalized Inverted Index)
+
+```postgresql
+CREATE INDEX idx_jsonb_gin ON documents USING gin (data jsonb_path_ops);
+```
+
+#### Когда использовать
+- поиск по множествам (массивам)
+- поиск по JSONB
+
+
+### BRIN (Block Rabge Index)
+
+```postgresql
+CREATE INDEX idx_date_brin ON events USING brin (event_date);
+```
+
+#### Когда использовать
+- быстрый поиск по большим данным
+- данные упорядочены по колонке
+- когда нужен индекс, занимающий меньшее кол-во места
+- временные данные
+
+
