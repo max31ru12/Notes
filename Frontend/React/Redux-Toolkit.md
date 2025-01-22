@@ -93,36 +93,6 @@ export const store = configureStore({
 
 `(state) => state.counter.value` принимает объект состояния и возвращает значение
 
-
-
-```js
-import React from 'react';
-import { useSelector, useDispatch} from 'react-redux';
-import { decrement, increment } from "../redux-toolkit/slices/counterSlice";
-
-export function Counter() {
-    // counter - это reducer, подключенный по имени `counter` в store
-    const count = useSelector((state) => state.counter.value);
-    const dispatch = useDispatch();
-
-    return (
-        <div>
-            <div>
-                <button aria-label="Increment value" onClick={() => dispatch(increment())}>
-                    Increment
-                </button>
-                <span>{count}</span>
-                <button aria-label="Increment value" onClick={() => dispatch(decrement())}>
-                    Decrement
-                </button>
-            </div>
-        </div>
-    )
-}
-```
-
-
-
 # Redux API
 
 ## createReducer
