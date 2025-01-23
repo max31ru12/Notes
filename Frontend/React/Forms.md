@@ -149,3 +149,26 @@ export default function SkillCreateForm() {
 ```
 
 
+### Если `ref`  необходимо передать в компонент
+
+```ts
+import { forwardRef } from 'react';  
+  
+  
+interface InputBoxProps {  
+    className?: string;  
+    labelText?: string;  
+    inputType?: 'email' | 'password';  
+    placeholder?: string;  
+}  
+  
+const InputBox= forwardRef<HTMLInputElement, InputBoxProps>((props, ref) => {  
+    return (  
+        <div className={props.className}>  
+            <label>{props.labelText}</label>  
+            <input ref={ref} type={props.inputType} required/>  
+        </div>    );  
+})  
+  
+export default InputBox;
+```

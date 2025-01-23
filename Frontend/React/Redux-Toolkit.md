@@ -1,4 +1,4 @@
-# Redux Toolkit
+
 
 `npm install @reduxjs/toolkit react-redux`
 
@@ -148,20 +148,11 @@ builder.addMatcher(isActionWithNumberPayload, (state, action) => {})
 ```
 
 
-### `addDefaultCase`
-
-
-
-# Thunks
+## Thunks
 
 Нужны (в основном) для асинхронного запроса к бэку
 
-## Thunk creation
-
-
-### Очень простой пример создания thunk'а
-
-#### Создание `thunk`
+### Thunk creation
 
 ```js
 export const fetchPerson = createAsyncThunk("person/fetch", async (thunkAPI) => 
@@ -175,7 +166,7 @@ export const fetchPerson = createAsyncThunk("person/fetch", async (thunkAPI) =>
 
 В данном случае то, что вернет функция внутри параметров `createAsyncThunk` - это то, что будет использоваться в `Slice'ах` через `action.payload`;
 
-#### Использование `thunk'а` 
+### Подключение `thunk'а` в slice 
 
 Подключаются `thunks` в `slice'ы` через параметр `extraReducers`:
 
@@ -202,7 +193,15 @@ export default PersonSlice.reducer;
 Можно использовать это `thunk` как, как fetchPerson 
 
 
-### Еще один пример
+### Использование `thunk'a`
+
+```ts
+const = useAppDispatch(fetchPerson)
+```
+
+
+
+## Еще один пример
 
 ```js
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
