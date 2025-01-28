@@ -122,6 +122,16 @@ export { registrationFormReducer } from "./store/reducer"
 #### Правило создания сегмента
 Создание новых сегментов должно отвечать на вопрос **"зачем?"**, а не на вопрос **"что?"**.
 
+####  Правило создания Public API
+Public API создается:
+- для каждого из слайсов внутри **layers**
+- для сегментов внутри **shared**
+
+```ts
+// pages/feed/index.ts
+export { FeedPage } from "./ui/FeedPage";
+```
+
 ##### Плохие примеры:
 - components
 - hooks
@@ -143,6 +153,7 @@ export { registrationFormReducer } from "./store/reducer"
 - `config/`
 - `i18n/` - локализация для языков
 - `router/` - константы для роутов, ссылки на **rest api**
+
 
 
 
