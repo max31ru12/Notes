@@ -196,14 +196,14 @@ select(table).where(table.c.name == "Test", ...)
 ### Выборка столбцов, алиасы
 ```python
 # Выборка двух полей таблицы
-select(table.c.column_1, table.c.column_2)
+select(table.column_1, table.c.column_2)
 # Объединить две колонки
-select(table.c.column_1 + table.c.column_2)
+select(table.column_1 + table.c.column_2)
 # Добавить Alias
-select(table.c.column).label("ALIAS")
+select(table.column).label("ALIAS")
 ```
 
-### Условия выборки `table.c.column`:
+### Условия выборки `table.column`:
 - `startswith("Test")`
 - `contains("3")`
 - `in_([1, 2, ...])`

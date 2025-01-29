@@ -40,3 +40,5 @@ tmp
 
 
 `poetry show --latest`		- версии пакетов и их более новые (если они есть)
+
+`poetry install --with dev` - установить с dev зависимостями

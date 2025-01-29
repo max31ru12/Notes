@@ -1,45 +1,39 @@
 
 
 
-
-        МЕТОДЫ МОДЕЛИ (например, user)
-
-# рекурсивно создает словари вложенных моделей (.dict() так не может)
-user.model_dump()           - создает словарь полей и значений модели
-user.model_copy()           - создает неглубокую копию модели
-user.model_dump_json()      - создает JSON-строку модели
-
-# не думаю, что пригодится
-user.model_extra            - возвращает словаарь доплнительных полей
-user.model_fields_set       - возвращает множество имен полей модели
-
-# чуть более подробное описание полей
-user.model_fields           - возвращает множество имен полей модели
+```python
+user.model_dump()           # создает словарь полей и значений модели
+user.model_copy()           # создает неглубокую копию модели
+user.model_dump_json()      # создает JSON-строку модели
+```
 
 
-        ВАЛИДАЦИЯ ДАННЫХ ИЗ ORM И СВОИХ КЛАССОВ
+#### Описание полей
+```python
+user.model_fields           # возвращает множество имен полей модели
+```
 
-# В своей модели UserSchema можно приписать такую вещь:
-model_config = ConfigDict(from_attributes=True)
+## Валидация данных из ORM своих классов
 
-# тогда можно создать объект с помощью ORM:
-user_orm = UserTable(**kwargs)
+Задаем `model_config`:
 
-# а затем передать этот объект в свою Pydantic-модель:
-validated_user = UserSchema.model_validate(user_orm)
+```python
+class UserData(BaseModel):
+	username: str
+	password: str
+	
+	model_config = {
+		"from_attributes": True
+	}
+```
 
+Получаем **Pydantic-модель** из модели **User**:
 
-        ПОЛЯ МОДЕЛЕЙ
+```python
+user = await get_user_db(...)  # Модель алхимии
+user_pydantic_model = User.from_orm(user)  # Модель pydantic
+```
 
-# Базовое поле и его параметры
-Field(default="John Doe",				- дефолтное значение
-      default_factory=lambda: uuid4().hexб,		- дефолтное значение - результат вызова Callable (uuid4().hex)
-      alias='foo',					- alias для поля
-      gt, lt, ge, le					- и так понятно 		ЧИСЛОВЫЕ ОГРАНИЧЕНИЯ
-      
-      min_length, max_length,				- понятно			СТРОКОВЫЕ ОГРАНИЧЕНИЯ
-      pattern)						- ругулярка			СТРОКОВЫЕ ОГРАНИЧЕНИЯ
-      
 
 Остальные ограничения для разных типов - https://docs.pydantic.dev/latest/concepts/fields/
 
