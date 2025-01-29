@@ -2,7 +2,7 @@
 
 
 
-```py
+```python
 from django.bd import models
 
 

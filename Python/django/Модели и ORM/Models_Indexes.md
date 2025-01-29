@@ -1,6 +1,6 @@
-# Индексы Django
 
-```py
+
+```python
 class Model(...):
     ...
     class Meta:
