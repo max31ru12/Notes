@@ -1,7 +1,7 @@
 
 ## Конфигурация SQLAlchemy
 
-1. Создаем движок
+### 1\. Создаем движок
 
 ```python
 from sqlalchemy.ext.asyncio import create_async_engine
@@ -14,11 +14,9 @@ async_engine = create_async_engine(
 )
 ```
 
-10 подключений к БД, + 20 дополнительных при необходимости
+10 подключений к БД, + 20 дополнительных при необходимости. Соединение через движок: `async with engine.connect()`
 
-Соединение через движок: `async with engine.connect()`
-
-2. Создаем метаданные
+### 2\. Создаем метаданные
 
 ```python
 from sqlachemy import MetaData
@@ -26,15 +24,16 @@ from sqlachemy import MetaData
 metadata = MetaData()
 ```
 
-Вариант через `declarative_base
-`
+Вариант через `declarative_base`:
+
 ```python
 from sqlalchemy.orm import declarative_base()
 
 Base = declarative_base()  # затем наследуем Base в моделях 
 ```
 
-Вариант через класс
+Вариант через класс:
+
 ```python
 from sqlachemy.orm import DeclarativeBase
 
@@ -43,7 +42,7 @@ class Base(DeclarativeBase):  # класс Base родитель для табл
 ```
 
 
-3. Создать таблицы через metadata
+### 3\. Создать таблицы через metadata
 
 ```python
 # Синхронный вариант 
@@ -57,7 +56,7 @@ async def create_tables():
 
 Метадату можно взять из `Base.metadata`
 
-4. Создать `sessionmaker`
+### 4\. Создать `sessionmaker`
 
 ```python
 from sqlalchemy.ext.asyncio import async_sessionmaker
@@ -256,18 +255,18 @@ select(table_1, table_2).join(table_2)
 
 **UPDATE** - обновление данных
 ```python
-update(table).where(table.c.column == "...").values(column="new")
+update(table).where(Model.column == "...").values(column="new")
 ```
 
 **DELETE** - удаление данных
 ```python
-stmt = delete(table).where(condition)  # удаление
+stmt = delete(Model).where(condition)  # удаление
 conn.execute(stmt).rowcount  # кол-во удаленных строчек
 ```
 
 **RETURNING** - есть у INSERT, UPDATE, DELETE
 ```python
-delete(table).where(condition).returning(table.c.column)
+delete(Model).where(condition).returning(table.c.column)
 ```
 дальше пременяем scalars, all и тд.
 
