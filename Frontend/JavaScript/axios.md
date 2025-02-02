@@ -61,3 +61,16 @@ export default function Counter(){
 }
 ```
 
+
+## Настройка axios для сохранения cookies в storage
+
+```ts
+import axios from "axios";  
+  
+const api = axios.create({  
+    baseURL: "http://localhost:8000/api/v1",   
+    withCredentials: true, // ОБЯЗАТЕЛЬНО для передачи cookies  
+});  
+  
+export default api;
+```
