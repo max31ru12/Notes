@@ -10,7 +10,7 @@ Promise может находиться в одном из трех состоя
 - `fulfilled` - получен результат
 - `rejected` - ошибка.
 
-## Создангие Promise'а
+## Создание Promise'а
 
 ```js
 let promise = new promise(

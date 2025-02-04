@@ -1,5 +1,5 @@
 
-## Index types Postgresql 
+## Index types PostgreSQL
 
 - B-Tree
 - Hash
