@@ -74,7 +74,7 @@ export default counterSlice.reducer
 
 ```js
 // .../store.js
-import counterStore from '../features/counter/counterSlice';
+import counterSlice from '../features/counter/counterSlice';
 
 export const store = configureStore({
   reducer: {

@@ -1,4 +1,12 @@
 
+## Redirect
+
+```ts
+const navigate = useNavigate();
+navigate("/");
+```
+
+
 ## Создание Router'а
 
 ```js
