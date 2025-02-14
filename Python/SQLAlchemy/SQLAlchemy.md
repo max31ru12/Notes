@@ -234,21 +234,61 @@ select(table).order_by(table.c.column.desc())  # DESC
 select(table).group_by("column")
 ```
 
-### Соединения таблиц `JOIN'ы`
+## Соединения таблиц `JOIN'ы`
+
+| Способ          | Когда использовать?                        | SQL-запрос                  |
+|----------------|--------------------------------|----------------------------|
+| `joinedload()` | Если **всегда нужен** `Brand` (быстро) | `JOIN` в одном SQL-запросе |
+| `selectinload()` | Если `Car` **много** (экономит память) | Два SQL-запроса (меньше дубликатов) |
+| `join()` | Если нужен `JOIN` + фильтр (`WHERE`, `GROUP BY`) | `INNER JOIN` |
+| `outerjoin()` | Если у некоторых `Car` нет `Brand` | `LEFT JOIN` |
+
+
+### joinedload()
+
+```python
+select(Car).options(joinedload(Car.brand))
+```
+
+- join делается на уровне SQL-запроса
+- без дополнительных запросов к БД
+
+### selectinload()
+
+Отложенная загрузка. Не использует `join`, поэтому работает быстрее для больших таблиц
+
+```python
+select(Car).options(selectinload(Car.brand))
+```
+
+- загружает *car*
+- потом загружает *brand*
+
+Делает запрос вида:
+
+```sql
+SELECT * FROM cars;
+SELECT * FROM brands WHERE brands.id IN (1, 2, 3, ...);
+```
+
+### Явный join()
+`
+```python
+select(Car).join(Brand).where(Brand.name == brand_name)
+```
+
+- делает `INNER JOIN`
+- Позволяет фильтровать данные по `Brand`
+- Используется для отчетов, агрегации, сложных фильтров
 
 Есть также `outerjoin()`, `outerjoin_from()`
 
-#### Явное задание двух таблиц для соединения
-```python
-# Указываем обе таблицы (без условия)
-select(table_1.c.email, table_2.c.name).join_from(table_1, table_2)
-# Явно указываем условия
-select(...).join_from(table_1, table_2, table_1.c.id == table_2.c.user_id)
-```
+### outerjoin()
 
-#### 
+`outerjoin()` делает SQL `LEFT JOIN`, что включает `Car`, даже если у него нет `Brand`
+
 ```python
-select(table_1, table_2).join(table_2)
+select(Car, Brand).outerjoin(Brand)
 ```
 
 ## Удаление и обновление (UPDATE, DELETE)
