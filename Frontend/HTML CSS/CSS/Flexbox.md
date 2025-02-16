@@ -1,7 +1,7 @@
 
 ## Базовая информация
 
-Дочерние элемент **flex-контейнера** автоматическти становятся **flexible**. 
+Дочерние элемент **flex-контейнера** автоматически становятся **flexible** - [[Flex items]]
 
 **Layout modes:**
 - `block` for section in a webpage
@@ -21,6 +21,9 @@
 ```
 
 Свойство `display: flex` позволяет сделать контейнер **flexible**. Также позволяет свойству `margin: auto` выравнивать блоки и по вертикали (по умолчанию он выравнивает только по горизонтали)
+
+### inline-flex
+Это как `display: flex`, только размер контейнера будет высчитывать по его содержимому
 
 #### Свойства flex контейнеров:
 - [`flex-direction`](https://www.w3schools.com/css/css3_flexbox_container.asp#flex-direction)
@@ -49,7 +52,6 @@ flex-wrap: wrap
 
 ![[Pasted image 20241119140428.png]]
 
-
 ### `justify-content`
 
 Дефолтное значение - `flex-start`
@@ -72,7 +74,8 @@ flex-wrap: wrap
 
 ### `align-items`
 
-Используется для выравнивания элементов в зависимости от той оси, которая выбрана в `flex-direction`.
+Используется для выравнивания элементов в зависимости от той оси, которая выбрана в `flex-direction`. Работает только при заданной высоте контейнера (для **flex-direction: row**) чтобы было место, куда выравнивать. Аналогично **width** для **column**
+
 
 Есть варианты **align-items**:
 - `center`;
@@ -83,11 +86,9 @@ flex-wrap: wrap
 
 ### `align-content`
 
-**Позволяет выровнять по вертикали надписи внутри li**
+`align-content` нужно для выравнивания **flex-линий**. Помогает распределить свободное пространство между рядами flex-элементов по поперечной оси
 
-`align-content` нужно для выравнивания **flex-линий**. Судя по всему работает с связке с **flex-wrap**.
-
-![[Pasted image 20241119143231.png]]
+![[Pasted image 20250216155326.png]]
 
 
 
@@ -97,7 +98,7 @@ flex-wrap: wrap
 
 ![[Pasted image 20241119143449.png]]
 
-
+![[Pasted image 20250215010325.png]]
 ## Perfect centering
 
 ```css
@@ -108,22 +109,3 @@ flex-wrap: wrap
 	align-items: center;
 }
 ```
-
-## Flex items properties
-
-[Про свойства flex-элементов](https://www.w3schools.com/css/css3_flexbox_items.asp)
-
-`Пример:` Сделать третий элемент в 8 раз больше, чем первые 2:
-```html
-<div class="flex-container">  
-  <div style="flex-grow: 1">1</div>  
-  <div style="flex-grow: 1">2</div>  
-  <div style="flex-grow: 8">3</div>  
-</div>
-```
-
-Эта штука поделит контейнер на 10 частей в отношении 1 : 1 : 8.
-
-
-
-
