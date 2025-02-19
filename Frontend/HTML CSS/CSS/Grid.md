@@ -10,7 +10,7 @@
 
 ![[Pasted image 20250218221337.png|400x400]]
 
-### grid-yemplate-columns
+### grid-template-columns
 
 Задает количество и размер колонок, на которое будет разделено пространство. Внутренние элементы переносятся как при `flex-wrap: wrap`
 
@@ -29,6 +29,9 @@ grid-template-column: minmax(200px, 35%) 1fr 50px;
 /* не переносить колонки, указанные в grid-auto-columns на новую строку после колонок, указанных в grid-template-columns */
 grid-auto-columns: 50px 100px;
 grid-auto-flow;
+
+/* shortcut для grid-template-rows и grid-template-columns а таком порядке */
+grid-template: 20px 20px / 40px 40px;
 ```
 
 `1fr` **(fraction - дробь/доля/часть)** - на сколько равных частей будет поделен каждый элемент. **В данном случае - 1/3** (работает как соотношение во flex-wrap)
@@ -48,10 +51,33 @@ grid-auto-rows: 15px;
 ![[Pasted image 20250218222202.png]]
 
 
+### grid-area
+
+Начало и конец идут в таком порядке
+
+1. grid-row-start
+2. grid-column-start
+3. grid-row-end
+4. grid-column-end
+
+```css
+#garden {
+  display: grid;
+  grid-template-columns: 20% 20% 20% 20% 20%;
+  grid-template-rows: 20% 20% 20% 20% 20%;
+}
+
+#water {
+  grid-area: 1 / 2 / 4 / 6;
+}
+```
+
+![[Pasted image 20250219152114.png|400x400]]
+
+
 ### grid-template-areas
 
 Позволяет указать шаблон сетки grid-контейнера
-
 
 ```css
 display: grid;
