@@ -28,17 +28,17 @@
 - [x] Оси в Flexbox: `flex-direction`, `justify-content`, `align-items`, `align-self`
 - [x] Свойства `flex-wrap`, `flex-grow`, `flex-shrink`, `flex-basis`
 - [x] Распределение элементов (`space-between`, `space-around`, `space-evenly`)
-- [ ] Практика: создаем адаптивный `navbar` и карточки товаров
+- [x] Практика: создаем адаптивный `navbar` и карточки товаров
 
 ---
 
 ## 🎯 **4. Grid Layout – мощная система разметки**
-- [ ] Основная концепция `display: grid`
-- [ ] Создание сетки `grid-template-columns`, `grid-template-rows`
-- [ ] Размещение элементов с `grid-column`, `grid-row`
-- [ ] `gap`, `align-items`, `justify-items`, `place-items`
-- [ ] `grid-auto-flow` и `grid-template-areas`
-- [ ] Практика: адаптивная карточная сетка
+- [x] Основная концепция `display: grid`
+- [x] Создание сетки `grid-template-columns`, `grid-template-rows`
+- [x] Размещение элементов с `grid-column`, `grid-row`
+- [x] `gap`, `align-items`, `justify-items`, `place-items`
+- [x] `grid-auto-flow` и `grid-template-areas`
+- [x] Практика: адаптивная карточная сетка
 
 ---
 
@@ -51,17 +51,17 @@
 
 ## 🌎 **6. Адаптивная вёрстка (Responsive Design)**
 - [x] Основные единицы измерения (`px`, `em`, `rem`, `%`, `vh`, `vw`, `fr`)
-- [ ] `min-width`, `max-width`, `min-height`, `max-height`
-- [ ] `@media`-запросы: мобильная адаптация
+- [x] `min-width`, `max-width`, `min-height`, `max-height`
+- [x] `@media`-запросы: мобильная адаптация
 - [ ] `clamp()`, `calc()`, `var()`
 - [ ] Практика: адаптивный сайт с `media queries`
 
 ---
 
 ## 🎭 **7. CSS-анимации и переходы**
-- [ ] `transition` и его параметры (`ease`, `linear`, `ease-in-out`)
-- [ ] `transform`: `scale`, `rotate`, `translate`, `skew`
-- [ ] `animation` + `@keyframes`
+- [x] `transition` и его параметры (`ease`, `linear`, `ease-in-out`)
+- [x] `transform`: `scale`, `rotate`, `translate`, `skew`
+- [x] `animation` + `@keyframes`
 - [ ] `will-change`, `perspective`, `3D-анимации`
 - [ ] Практика: анимированный hover-эффект и появление элемента
 
