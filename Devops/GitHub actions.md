@@ -63,8 +63,6 @@ jobs:
 ## FastAPI + docker workflow
 
 ```yml
-
-
 on:
   push:
     branches: [ main ]
