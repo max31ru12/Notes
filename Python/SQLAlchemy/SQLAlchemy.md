@@ -295,7 +295,7 @@ select(Car, Brand).outerjoin(Brand)
 
 **UPDATE** - обновление данных
 ```python
-update(table).where(Model.column == "...").values(column="new")
+update(Movie).where(Movie.id == movie_id).values(message_id=message_id)
 ```
 
 **DELETE** - удаление данных

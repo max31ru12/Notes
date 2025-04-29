@@ -9,6 +9,7 @@
 - `docker rmi id` 			            - удалить образ с указанным id
 - `docker pull nginx`		            - скачать образ
 - `docker exec -it id bash`		    - запустить файловую систему контейнера в bash
+- `docker logs id`                               - посмотреть логи контейнера
 
 
 ## ЗАПУСТИТЬ ОБРАЗ:
