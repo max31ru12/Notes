@@ -39,3 +39,11 @@ interface Dog extends Animal {
 ## Разница Type и Interface
 1. `Interface` только для объектов, `Type` - для различных типов, включая объекты
 2. `Type` может использоваться с примитивами, пересечениями и списками
+
+
+## Шаблонный литерал
+
+```ts
+// Начинается с user_id_
+type UserId = `user_id_${string}`
+```
