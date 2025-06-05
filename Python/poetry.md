@@ -42,3 +42,30 @@ tmp
 `poetry show --latest`		- версии пакетов и их более новые (если они есть)
 
 `poetry install --with dev` - установить с dev зависимостями
+
+
+## Обновление либы
+
+### Выпустить новую версию
+
+```shell
+poetry version patch   # или: minor / major
+```
+
+Примеры:
+
+- **patch** → 0.1.1 → 0.1.2
+- **minor** → 0.1.2 → 0.2.0
+- **major** → 0.2.5 → 1.0.
+
+### Собрать пакет
+
+```shell
+poetry build
+```
+
+### Опубликовать пакет
+
+```shell
+poetry publish --build # Опционально можно забилдить
+```
