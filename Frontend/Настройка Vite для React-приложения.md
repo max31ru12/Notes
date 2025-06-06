@@ -106,7 +106,7 @@ npx husky init # Создает pre-commit файл в папке .husky
   "build": "tsc -b && vite build",  
   "lint": "eslint . ./src --ext .ts,.tsx --fix",  // раширения обязательно, так как файлы .ts и .tsx не проверяются автоматически
   "preview": "vite preview",  
-  "format": "prettier ./src --write",  
+  "format": "prettier --write /src",  
   "prepare": "husky"  
 },
 // list-staged проводит проверки только для изменнных файлов
@@ -135,4 +135,105 @@ npm run format
 npx lint-staged
 ```
 
+
+## Полные конфигурации
+
+### eslint.config.js
+
+```js
+import js from "@eslint/js"  
+import globals from "globals"  
+import reactHooks from "eslint-plugin-react-hooks"  
+import reactRefresh from "eslint-plugin-react-refresh"  
+import tseslint from "typescript-eslint"  
+import prettier from "eslint-config-prettier"  
+  
+export default tseslint.config(  
+    { ignores: ["dist", "node_modules", "public"] },  
+    {  
+        extends: [js.configs.recommended, ...tseslint.configs.recommended, prettier],  
+        files: ["**/*.{ts,tsx}"],  
+        languageOptions: {  
+            ecmaVersion: 2020,  
+            globals: globals.browser,  
+        },  
+        plugins: {  
+            "react-hooks": reactHooks,  
+            "react-refresh": reactRefresh,  
+        },  
+        rules: {  
+            ...reactHooks.configs.recommended.rules,  
+            "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],  
+            "no-unused-vars": "warn",  
+            "react/react-in-jsx-scope": "off",  
+            semi: ["error", "never"],  
+        },  
+    },  
+)
+```
+
+### .prettier
+
+```json
+{  
+    "bracketSpacing": true,  
+    "semi": false,  
+    "printWidth": 100,  
+    "trailingComma": "all",  
+    "jsxSingleQuote": false,  
+    "tabWidth": 4,  
+    "endOfLine": "lf"  
+}
+```
+
+### package.json
+
+```json
+{  
+  "name": "mgstudio-frontend",  
+  "private": true,  
+  "version": "0.0.0",  
+  "type": "module",  
+  "scripts": {  
+    "dev": "vite",  
+    "build": "tsc -b && vite build",  
+    "lint": "eslint . ./src --ext .ts,.tsx --fix",  
+    "preview": "vite preview",  
+    "format": "prettier ./src --write",  
+    "prepare": "husky"  
+  },  
+  "lint-staged": {  
+    "*.{ts,tsx}": [  
+      "eslint --fix",  
+      "prettier --write"  
+    ]  
+  },  
+  "dependencies": {  
+    "eslint-config-prettier": "^10.1.5",  
+    "react": "^19.1.0",  
+    "react-dom": "^19.1.0"  
+  },  
+  "devDependencies": {  
+    "@eslint/js": "^9.25.0",  
+    "@types/react": "^19.1.2",  
+    "@types/react-dom": "^19.1.2",  
+    "@vitejs/plugin-react": "^4.4.1",  
+    "eslint": "^9.25.0",  
+    "eslint-plugin-react-hooks": "^5.2.0",  
+    "eslint-plugin-react-refresh": "^0.4.19",  
+    "globals": "^16.0.0",  
+    "husky": "^9.1.7",  
+    "prettier": "3.5.3",  
+    "typescript": "~5.8.3",  
+    "typescript-eslint": "^8.30.1",  
+    "vite": "^6.3.5"  
+  }  
+}
+```
+
+### husky pre-commit
+
+```
+npx lint-staged
+```
 
