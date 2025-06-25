@@ -237,3 +237,23 @@ export default tseslint.config(
 npx lint-staged
 ```
 
+## SVG иконка как компонент
+
+1. Добавить файл `svg.d.ts`: 
+ ```ts
+declare module '*.svg?react' {  
+    import * as React from 'react'  
+    const ReactComponent: React.FC<React.SVGProps<SVGSVGElement>>  
+    export default ReactComponent  
+}
+```
+
+2. Установить библиотеку:
+```shell
+npm install vite-plugin-svgr --save-dev
+```
+
+3. Импортировать с `?react` в конце:
+```tsx
+import TelegramLogo from "../../assets/icons/footer/TelegramLogo.svg?react"
+```
