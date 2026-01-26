@@ -4,7 +4,7 @@
 Дочерние элемент **flex-контейнера** автоматически становятся **flexible** - [[Flex items]]
 
 **Layout modes:**
-- `block` for section in a webpage
+- `block` for section on a webpage
 - `Inline` for text
 - `Table` for tables
 - `Positioned` for explicit position of an element

@@ -1,5 +1,5 @@
-						
-# Основы
+
+## Основы
 
 У React-компонентов есть пропсы:
 - `draggable` - делает элемент передвигаемым 
@@ -20,4 +20,43 @@
 >
 	...
 </div>
+```
+
+
+### Drop-зона
+
+drop-зона определяется как:
+
+```tsx
+<div
+  onDragOver={(e) => e.preventDefault()}
+  onDrop={(e) => {
+    const data = e.dataTransfer.getData('id')
+    console.log(data)
+  }}
+>
+  Drop here
+</div>
+```
+
+Drop-зона:
+
+1. Слушает **drag-события**
+2. Явно разрешает **drop**
+
+### Типизация event
+
+**event** всегда типизируется как `React.DragEvent`
+
+
+### Фикс неполного определения drop-зоны
+
+```tsx
+.cardContainer {
+  position: relative;
+}
+
+.cardContainer * {
+  pointer-events: none;
+}
 ```
