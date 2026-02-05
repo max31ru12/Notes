@@ -59,6 +59,14 @@ subq = (
 
 Возвращает только те строки, где есть совпадение в обеих таблицах
 
+> Сами по себе JOIN'ы не решают N+1 проблему. Они просто позволяют применять условия условия фильтрации, агрегации и прочее. N+1 проблему решают 
+> 
+
+- `selectinload()` - самый оптимальный,
+- `joinedload()` - может раздуть результат
+- `subqueryload()` - использует **SUBQERY** вместо **IN**
+- `contains_eager()` - ручной контроль, используется в сочетании с обычными join'ами
+
 ```python
 # Просто получаем юзера
 select(User).join(Address)  
@@ -77,6 +85,15 @@ select(User, Address).join(Address, full=True).filter(User.address == None, Addr
 ```
 
 
+#### Две модели в select
+
+**Join** != выбор данных. То есть если мы запросили только `User`  и сделал join на `Address`, то join выполнится, но вернуться только полям модели `User`. Чтобы получить обе сущности, надо явно их указать:
+
+```python
+select(User, Address).join(Address)
+```
+
+
 ### Left Outer Join
 
 Возвращает все строки из левой таблицы, даже если справа нет совпадений
@@ -87,7 +104,7 @@ select(User, Address).join(Address, full=True).filter(User.address == None, Addr
 select(User).outerjoin(Address)
 
 # Второй вариант
-select(User).join(Address, isouter=True)
+select(User).join(Address, isouter=True) 
 ```
 
 #### User with no address
