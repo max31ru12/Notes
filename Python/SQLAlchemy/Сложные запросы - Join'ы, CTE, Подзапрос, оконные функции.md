@@ -64,7 +64,7 @@ subq = (
 
 - `selectinload()` - самый оптимальный,
 - `joinedload()` - может раздуть результат
-- `subqueryload()` - использует **SUBQERY** вместо **IN**
+- `subqueryload()` - использует **SUBQUERY** вместо **IN**
 - `contains_eager()` - ручной контроль, используется в сочетании с обычными join'ами
 
 ```python
@@ -139,3 +139,26 @@ right_join = select(Address, User).outerjoin(User)
 # Full join
 full_outer_join = left_join.union(right_join)
 ```
+
+
+
+## Selectinload
+
+Подругает
+
+## Joinedload 
+
+### Пример использования
+
+```python
+result = session.execute(select(User).options(joinedload(User.posts)))
+
+
+# Выборка связанных значений
+users = result.scalars().unique().all()
+
+for user in users:
+	user_posts = user.posts
+```
+
+Необходимо использовать unique, так как joinedload размножает строки в выборке
