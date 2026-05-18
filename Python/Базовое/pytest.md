@@ -67,15 +67,72 @@ async def some_smth():
 
 
 
+### Mock функций
 
 
+#### Объекты-заглушки с помощью SimpleNamespace
+
+`SimpleNamespace` — это очень простой объект, в который можно складывать поля “как попало”, почти как в `dict`, но доступ к значениям идет через точку.
+
+```python
+from types import SimpleNamespace
+
+user = SimpleNamespace(id=1, name="Max")
+
+print(user.id) # 1  
+print(user.name) # Max
+```
 
 
+#### Подмена объекта/функции на время выполнения теста
+
+Патчить надо там, где функция вызывается - `"app.module.get_user_name"`, а не там, где объявляется   
+
+```python
+from unittest.mock import patch
+
+with patch("app.module.get_user_name") as mock_get_user_name:
+	mock_get_user_name.return_value = "Test User"  
+	result = some_function()
+```
 
 
+##### 1. `patch("app.module.get_user_name")`
 
+Это означает: возьми функцию `get_user_name` в модуле `app.module`  
+и временно замени её на мок-объект
 
+То есть:
 
+`app.module.get_user_name = Mock()`
 
+##### 2. `as mock_get_user_name`
 
+Это просто ссылка на этот мок
 
+##### 3. `mock_get_user_name.return_value = "Test User"`
+
+Это значит: "когда этот мок вызовут как функцию → верни `'Test User'`"
+
+##### 4. `some_function()` 
+Это функция, где внутри выполняется та функция, которую мы замокали (мы замокали выполнение `get_user_name`, которая вызывается в `some_function`)
+
+#### Пример
+
+```python
+from types import SimpleNamespace  
+from unittest.mock import patch, AsyncMock  
+  
+fake_user = SimpleNamespace(id=1, name="Max")  
+  
+with patch("app.use_cases.user_service.get_user", new=AsyncMock(return_value=fake_user)):  
+    result = await some_async_function()
+```
+
+Тут:
+
+- `fake_user` — простая заглушка-объект
+- `patch(...)` — временно заменил `get_user`
+- `AsyncMock(...)` — сделал поддельную async-функцию
+- при `await get_user()` вернется `fake_user`
+- `some_adync_function` - это асинхронная функция, где выполняется та функция, которую мы хотим замокать
