@@ -3,6 +3,13 @@
 
 #### Обновить сертификаты (при уже существующих сертификатах)
 
+Репетиция обновления
+
+```bash
+docker compose -f production.yml run --rm certbot renew --dry-run
+```
+
+
 ```bash
 docker compose -f production.yml run --rm certbot certonly --webroot -w /var/www/html -d asrpath.org --email you@example.com --agree-tos --no-eff-email --force-renewal
 ```
