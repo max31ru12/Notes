@@ -136,3 +136,16 @@ with patch("app.use_cases.user_service.get_user", new=AsyncMock(return_value=fak
 - `AsyncMock(...)` — сделал поддельную async-функцию
 - при `await get_user()` вернется `fake_user`
 - `some_adync_function` - это асинхронная функция, где выполняется та функция, которую мы хотим замокать
+
+
+#### Заменить метод объекта
+
+```python
+with patch.object(
+	EmailQueue, 
+	"send_email", 
+	new_callable=AsyncMock
+) as mock_send_email:
+
+mock_send_email.assert_awaited_once()
+```
