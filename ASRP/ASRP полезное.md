@@ -85,3 +85,13 @@ psql -U <user> -d <database> -f data_only_dump.sql
 ```bash
 docker exec -i container_name psql -U <user> -d <target_db> < data_only_dump.sql
 ```
+
+
+
+## Фикс 502 nginx'а
+
+Nginx не обновляет автоматически свой DNS: У nginx сохраняется старый IP контейнера бэкенда, а IP обновился, поэтому возникает 502. Фикс - перезапуск контейнера:
+
+```bash
+docker compose restart nginx
+```
