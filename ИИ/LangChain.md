@@ -48,9 +48,7 @@ doc.id # optional идентификатор
 ]
 ```
 
-
 ### Пример с чтением файла 
-
 
 ```python
 from langchain_core.documents import Document
@@ -65,10 +63,6 @@ document = Document(
     },
 )
 ```
-
-
-1. Document
-2. Document Loaders
 
 ## Text splitters
 
@@ -137,11 +131,238 @@ query_vector = embeddings.embed_query(query)
 
 ## VectorStore (Qdrant) в LangChain
 
+VectorStore связывает `Document` + `Embeddings` + `Векторную БД`
+
+### Библиотека 
+
+```bash
+pip install langchain-qdrant
+```
+
+
+### Пример
+
+```python
+
+
+# 1. Qdrant client
+client = QdrantClient(url="http://localhost:6333")
+
+
+# 2. Embedding-модель
+embeddings = HuggingFaceEmbeddings(  
+    model_name="sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",  
+)
+
+
+# 3. LangChain VectorStore
+vector_store = QdrantVectorStore(
+	client=client,
+	collection_name="articles",
+	embeddings=embeddings,
+)
+```
+
+`QdrantVectorStore` - актуальная LangChain-интеграция с **Qdrant** (старый класс `Qdrant` сейчас deprecated)
+
+
+#### Добавление документов
+
+```python
+from langchain_core.documents import Document 
+
+documents = [ 
+	Document( 
+		page_content="RAG позволяет LLM использовать внешние данные.", 
+		metadata={"source": "rag.md"}, 
+	), 
+	Document( 
+		page_content="Qdrant — это векторная база данных.", 
+		metadata={"source": "qdrant.md"}, 
+	), 
+]
+```
+
+
+#### Поиск
+
+```python
+results = vector_store.similarity_search(
+	query="Что позволяет модели использовать дополнительные данные?",
+	k=2,
+)
+
+# Если нужен score
+results = vector_store.similarity_search_with_score( 
+	query="Что такое RAG?", 
+	k=2, 
+) 
+
+for document, score in results: 
+	print(document.page_content) 
+	print(score)
+```
+
 
 ## Retriever
+**Retriever** принимает запрос и возвращает релевантные `Document`. Retriever отвязывает RAG от конкретной реализации поиска.
+
+С Qdrant через `VectorStore` это выглядит так:
+
+```python
+retriever = vector_store.as_retriever(
+	search_kwargs={
+		"k": 3, 
+	},
+	search_type="similarity",
+)
+
+# Поиск
+documents = retriever.invoke("Что такое RAG?")
+```
+
+- `search_kwargs` - опциональный параметр
+- `search_type="similarity"` - опциональный параметр (по умолчанию - )
+
+## PromptTemplate / ChatPromptTemplate
+
+`ChatPromptTemplate` нужен, чтобы не собирать prompt руками через f-string 
+
+`PromptTemplate` удобен для обычных LLM. На вход принимает dict, на выходе - готовый текстовый prompt.
+
+### Пример
+
+```python
+from langchain_core.prompts import ChatPromptTemplate
 
 
-## Prompt + ChatModel
+prompt = ChatPromptTemplate.from_messages([ 
+	(
+		"system", 
+		"Ты помощник по RAG. Отвечай только на основе контекста." 
+	), 
+	(
+		"human", 
+		""" 
+		Контекст: {context} 
+		Вопрос: {question} 
+		""" 
+	), 
+])
+```
+
+В фигурных скобках переменные, которые подставляются позже
+
+```python
+context = """
+RAG позволяет языковой модели использовать
+внешние источники информации.
+"""
+
+question = "Что такое RAG?"
+
+result = prompt.invoke({
+    "context": context,
+    "question": question,
+})
+```
+
+Выход - ChatPromptValue:
+
+```
+ChatPromptValue 
+		↓ 
+[ 
+	SystemMessage(...), 
+	HumanMessage(...) 
+]
+```
+
+Например концептуально:
+
+```
+SystemMessage:
+"Ты помощник по RAG. Отвечай только на основе контекста."
+
+HumanMessage:
+"
+Контекст:
+RAG позволяет языковой модели использовать внешние источники информации.
+
+Вопрос:
+Что такое RAG?
+"
+```
+
+#### Роли модели - system, human 
+
+- **system** - инструкция модели, как вести себя
+- **human** - сообщение пользователя
+- **ai** - предыдущее сообщение модели (используется для передачи истории диалога)
+- **tool** - результат вызова tool
 
 
+## ChatModel / LLM
 
+### Базовый пример
+
+```python
+from langchain_ollama import ChatOllama
+from langchain_core.messages import HumanMessage
+
+
+model = ChatOllama(
+    model="qwen3:4b",
+)
+
+response = model.invoke([
+    HumanMessage(
+        content="Что такое RAG?"
+    )
+])
+
+# текст ответа
+print(response.content)
+```
+
+### Пример вместе с ChatpromptTemplate
+
+```python
+from langchain_ollama import ChatOllama
+from langchain_core.prompts import ChatPromptTemplate
+
+
+model = ChatOllama(
+    model="qwen3:4b",
+)
+
+
+prompt = ChatPromptTemplate.from_messages([
+    (
+        "system",
+        "Отвечай кратко и только на основе переданного контекста."
+    ),
+    (
+        "human",
+        """
+Контекст:
+{context}
+
+Вопрос:
+{question}
+"""
+    ),
+])
+
+
+prompt_value = prompt.invoke({
+    "context": "RAG позволяет LLM использовать внешние данные.",
+    "question": "Что такое RAG?",
+})
+
+
+response = model.invoke(prompt_value)
+
+
+print(response.content)
+```
